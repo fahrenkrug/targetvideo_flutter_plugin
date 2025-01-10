@@ -1,0 +1,28 @@
+PODS:
+  - Flutter (1.0.0)
+  - integration_test (0.0.1):
+    - Flutter
+  - targetvideo_flutter_plugin (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - targetvideo_flutter_plugin (from `.symlinks/plugins/targetvideo_flutter_plugin/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+  targetvideo_flutter_plugin:
+    :path: ".symlinks/plugins/targetvideo_flutter_plugin/ios"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
+  targetvideo_flutter_plugin: ae8ec4225de501e9b6eaec49ca444066972f6125
+
+PODFILE CHECKSUM: b8b6e418176e57bc864d7254a05075a3714e37bb
+
+COCOAPODS: 1.16.2
