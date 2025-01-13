@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import BridSDK
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {

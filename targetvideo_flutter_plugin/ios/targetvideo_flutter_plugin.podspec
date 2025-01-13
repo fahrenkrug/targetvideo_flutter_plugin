@@ -15,8 +15,10 @@ A new Flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-#   s.dependency 'BridSDK', '~> 1.3.1'
-  s.platform = :ios, '15.0'
+  s.dependency 'BridSDK' , '1.3.1'
+#   s.dependency 'google-cast-sdk'
+#   s.dependency 'PrebidMobile'
+  s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

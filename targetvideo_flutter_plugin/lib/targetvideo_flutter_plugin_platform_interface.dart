@@ -26,4 +26,8 @@ abstract class TargetvideoFlutterPluginPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<void> loadVideo(int playerId, int videoId) {
+    throw UnimplementedError('loadVideo() has not been implemented.');
+  }
 }

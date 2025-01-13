@@ -51,11 +51,14 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
+        appBar: AppBar(title: Text('Flutter Plugin Example')),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: ElevatedButton(
+            onPressed: () async {
+              await TargetvideoFlutterPlugin.loadVideo(45852, 21866);
+            },
+            child: Text('Load playlist'),
+          ),
         ),
       ),
     );

@@ -14,4 +14,16 @@ class MethodChannelTargetvideoFlutterPlugin extends TargetvideoFlutterPluginPlat
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  Future<void> loadVideo(int playerId, int videoId) async {
+    try {
+      await methodChannel.invokeMethod('loadVideo', {
+        'playerId': playerId,
+        'videoId': videoId,
+      });
+    } on PlatformException catch (e) {
+      debugPrint('Failed to load video: ${e.message}');
+      rethrow;
+    }
+  }
 }

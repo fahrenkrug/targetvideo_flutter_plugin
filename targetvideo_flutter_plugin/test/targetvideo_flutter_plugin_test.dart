@@ -10,6 +10,12 @@ class MockTargetvideoFlutterPluginPlatform
 
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<void> loadVideo(int playerId, int videoId) {
+    // TODO: implement loadVideo
+    throw UnimplementedError();
+  }
 }
 
 void main() {
