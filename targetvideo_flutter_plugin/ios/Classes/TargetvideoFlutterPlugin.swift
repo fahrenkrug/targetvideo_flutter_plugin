@@ -3,6 +3,7 @@ import UIKit
 import BridSDK
 
 public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
+    var player: BVPlayer?
     private let videoViewFactory: NativeVideoViewFactory
     
     // Ensure the initializer is internal to avoid the access level issue
@@ -26,7 +27,6 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
             result("iOS " + UIDevice.current.systemVersion)
         case "loadVideo":
             let playerView = UIView()
-            var player = BVPlayer()
             guard let args = call.arguments as? [String: Any],
                   let viewId = args["viewId"] as? Int64,
                   let playerId = args["playerId"] as? Int,
@@ -36,18 +36,21 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
                 return
             }
 
-            playerView.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(playerView)
-
-            NSLayoutConstraint.activate([
-                playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                playerView.topAnchor.constraint(equalTo: view.topAnchor),
-                playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ])
-
-            let data = BVData(playerID: Int32(playerId), forVideoID: Int32(videoId))
-            player = BVPlayer(data: data, for: playerView)
+            DispatchQueue.main.async {
+                playerView.translatesAutoresizingMaskIntoConstraints = false
+                playerView.backgroundColor = .red
+                view.addSubview(playerView)
+                
+                NSLayoutConstraint.activate([
+                    playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                    playerView.topAnchor.constraint(equalTo: view.topAnchor),
+                    playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                ])
+                
+                let data = BVData(playerID: Int32(playerId), forVideoID: Int32(videoId))
+                self.player = BVPlayer(data: data, for: playerView)
+            }
 
             result(nil)
         default:
