@@ -16,8 +16,6 @@ A new Flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.dependency 'BridSDK' , '1.3.1'
-#   s.dependency 'google-cast-sdk'
-#   s.dependency 'PrebidMobile'
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.

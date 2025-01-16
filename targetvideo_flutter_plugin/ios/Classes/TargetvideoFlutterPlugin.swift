@@ -3,45 +3,95 @@ import UIKit
 import BridSDK
 
 public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "targetvideo_flutter_plugin", binaryMessenger: registrar.messenger())
-    let instance = TargetvideoFlutterPlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
-
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
-    case "getPlatformVersion":
-      result("iOS " + UIDevice.current.systemVersion)
-    case "loadVideo":
-          guard let args = call.arguments as? [String: Any],
-          let playerId = args["playerId"] as? Int,
-          let videoId = args["videoId"] as? Int else {
-          result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
-          return
-           }
-          debugPrint("Load Video called with playerId: \(playerId), videoId: \(videoId)")
-          let videoView = UIView()
-              videoView.translatesAutoresizingMaskIntoConstraints = false // Enable Auto Layout
-              videoView.backgroundColor = .black // Optional: Set a placeholder background color
-
-              // Add the view to the root view controller's view
-              if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view {
-                  rootView.addSubview(videoView)
-
-                  // Add constraints
-                  NSLayoutConstraint.activate([
-                      videoView.topAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.topAnchor),
-                      videoView.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
-                      videoView.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
-                      videoView.heightAnchor.constraint(equalTo: videoView.widthAnchor, multiplier: 9.0/16.0)
-                  ])
-              }
-          var player = BVPlayer()
-          player = BVPlayer(data: BVData(playerID: Int32(playerId), forPlaylistID: Int32(videoId)), for: videoView)
-          result(nil)
-    default:
-      result(FlutterMethodNotImplemented)
+    private let videoViewFactory: NativeVideoViewFactory
+    
+    // Ensure the initializer is internal to avoid the access level issue
+    public init(videoViewFactory: NativeVideoViewFactory) {
+        self.videoViewFactory = videoViewFactory
+        super.init()
     }
-  }
+
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "targetvideo_flutter_plugin", binaryMessenger: registrar.messenger())
+        let videoViewFactory = NativeVideoViewFactory()
+        let instance = TargetvideoFlutterPlugin(videoViewFactory: videoViewFactory)
+
+        registrar.addMethodCallDelegate(instance, channel: channel)
+        registrar.register(videoViewFactory, withId: "targetvideo/player_video_view")
+    }
+
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        switch call.method {
+        case "getPlatformVersion":
+            result("iOS " + UIDevice.current.systemVersion)
+        case "loadVideo":
+            let playerView = UIView()
+            var player = BVPlayer()
+            guard let args = call.arguments as? [String: Any],
+                  let viewId = args["viewId"] as? Int64,
+                  let playerId = args["playerId"] as? Int,
+                  let videoId = args["videoId"] as? Int,
+                  let view = videoViewFactory.getView(byId: viewId) else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments or view not found", details: nil))
+                return
+            }
+
+            playerView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(playerView)
+
+            NSLayoutConstraint.activate([
+                playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                playerView.topAnchor.constraint(equalTo: view.topAnchor),
+                playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+
+            let data = BVData(playerID: Int32(playerId), forVideoID: Int32(videoId))
+            player = BVPlayer(data: data, for: playerView)
+
+            result(nil)
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+}
+
+public class NativeVideoViewFactory: NSObject, FlutterPlatformViewFactory {
+    private var views: [Int64: NativeVideoView] = [:]
+
+    public override init() {
+        super.init()
+    }
+
+    public func create(
+        withFrame frame: CGRect,
+        viewIdentifier viewId: Int64,
+        arguments args: Any?
+    ) -> FlutterPlatformView {
+        let view = NativeVideoView(frame: frame)
+        views[viewId] = view
+        return view
+    }
+
+    public func getView(byId viewId: Int64) -> UIView? {
+        return views[viewId]?.view()
+    }
+}
+
+public class NativeVideoView: NSObject, FlutterPlatformView {
+    private let containerView: UIView
+
+    public init(frame: CGRect) {
+        self.containerView = UIView(frame: frame)
+        super.init()
+        setupView()
+    }
+
+    private func setupView() {
+        containerView.backgroundColor = .lightGray
+    }
+
+    public func view() -> UIView {
+        return containerView
+    }
 }
