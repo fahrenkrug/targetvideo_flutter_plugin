@@ -6,7 +6,7 @@ class TargetvideoFlutterPlugin {
     return TargetvideoFlutterPluginPlatform.instance.getPlatformVersion();
   }
 
-  static Future<void> loadVideo(int playerId, int videoId) async {
-    await TargetvideoFlutterPluginPlatform.instance.loadVideo(playerId, videoId);
+  static Future<void> loadVideo(int playerId, int videoId, int viewId) async {
+    await TargetvideoFlutterPluginPlatform.instance.loadVideo(playerId, videoId, viewId);
   }
 }

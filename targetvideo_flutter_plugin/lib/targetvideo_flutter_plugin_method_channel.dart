@@ -4,22 +4,25 @@ import 'package:flutter/services.dart';
 import 'targetvideo_flutter_plugin_platform_interface.dart';
 
 /// An implementation of [TargetvideoFlutterPluginPlatform] that uses method channels.
-class MethodChannelTargetvideoFlutterPlugin extends TargetvideoFlutterPluginPlatform {
+class MethodChannelTargetvideoFlutterPlugin
+    extends TargetvideoFlutterPluginPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('targetvideo_flutter_plugin');
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version =
+        await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 
-  Future<void> loadVideo(int playerId, int videoId) async {
+  Future<void> loadVideo(int playerId, int videoId, int viewId) async {
     try {
       await methodChannel.invokeMethod('loadVideo', {
         'playerId': playerId,
         'videoId': videoId,
+        'viewId': viewId,
       });
     } on PlatformException catch (e) {
       debugPrint('Failed to load video: ${e.message}');
