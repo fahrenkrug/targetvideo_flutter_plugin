@@ -27,7 +27,84 @@ abstract class TargetvideoFlutterPluginPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
+  Future<void> createPlayer(String playerReference) {
+    throw UnimplementedError('createPlayer() has not been implemented');
+  }
+
   Future<void> loadVideo(int playerId, int videoId, int viewId) {
     throw UnimplementedError('loadVideo() has not been implemented.');
   }
+
+  Future<void> loadPlaylist(int playerId, int playlistId, int viewId, String playerReference) {
+    throw UnimplementedError('loadPlaylist() has not been implemented.');
+  }
+
+  Future<void> pauseVideo(String playerReference) {
+    throw UnimplementedError('pauseVideo() has not been implemented');
+  }
+
+  Future<void> playVideo() {
+    throw UnimplementedError('playVideo() has not been implemented.');
+  }
+
+  Future<void> previous() {
+    throw UnimplementedError('previous() has not been implemented.');
+  }
+
+  Future<void> next() {
+    throw UnimplementedError('next() has not been implemented.');
+  }
+
+  Future<void> mute() {
+    throw UnimplementedError('mute() has not been implemented.');
+  }
+
+  Future<void> unMute() {
+    throw UnimplementedError('unMute() has not been implemented.');
+  }
+
+  Future<void> setFullscreen(bool fullscreen) {
+    throw UnimplementedError('setFullscreen() has not been implemented.');
+  }
+
+  Future<void> showControls() {
+    throw UnimplementedError('showControls() has not been implemented.');
+  }
+
+  Future<void> hideControls() {
+    throw UnimplementedError('hideControls() has not been implemented.');
+  }
+
+  Future<bool> isAdPlaying() {
+    throw UnimplementedError('isAdPlaying() has not been implemented.');
+  }
+
+  Future<num?> getPlayerCurrentTime() {
+    throw UnimplementedError('getPlayerCurrentTime() has not been implemented.');
+  }
+
+  Future<num?> getAdDuration() {
+    throw UnimplementedError('getAdDuration() has not been implemented.');
+  }
+
+  Future<num?> getVideoDuration() {
+    throw UnimplementedError('getVideoDuration() has not been implemented.');
+  }
+
+  Future<bool> isPaused() {
+    throw UnimplementedError('isPaused() has not been implemented.');
+  }
+
+  Future<bool> isRepeated() {
+    throw UnimplementedError('isRepeated() has not been implemented.');
+  }
+
+  Future<void> destroyPlayer() {
+    throw UnimplementedError('destroyPlayer() has not been implemented.');
+  }
+
+  Future<bool> isAutoplay() {
+    throw UnimplementedError('isAutoplay() has not been implemented.');
+  }
+
 }

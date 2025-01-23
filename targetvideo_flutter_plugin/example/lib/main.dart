@@ -32,6 +32,7 @@ class NativeVideoWidget extends StatefulWidget {
 
 class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   int? _viewId;
+  int? _viewId2;
 
   Future<void> _loadVideo() async {
     if (_viewId == null) {
@@ -40,11 +41,30 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
     }
 
     try {
-      await TargetvideoFlutterPlugin.loadVideo(
-        45852,
-        1597191,
-        _viewId!,
-      );
+      await TargetvideoFlutterPlugin.loadPlaylist(45852, 24090, _viewId!, "first");
+      // await TargetvideoFlutterPlugin.loadVideo(
+      //   45852,
+      //   1597191,
+      //   _viewId!,
+      // );
+    } on PlatformException catch (e) {
+      print("Failed to load video: '${e.message}'.");
+    }
+  }
+
+  Future<void> _loadVideo2() async {
+    if (_viewId2 == null) {
+      print("View ID is not available yet.");
+      return;
+    }
+
+    try {
+      await TargetvideoFlutterPlugin.loadPlaylist(45852, 24090, _viewId2!, "second");
+      // await TargetvideoFlutterPlugin.loadVideo(
+      //   45852,
+      //   1597191,
+      //   _viewId2!,
+      // );
     } on PlatformException catch (e) {
       print("Failed to load video: '${e.message}'.");
     }
@@ -84,9 +104,58 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
             },
           ),
         ),
+        Container(
+          width: platformViewWidth,
+          height: platformViewHeight,
+          child: Platform.isIOS
+              ? UiKitView(
+            viewType: 'targetvideo/player_video_view',
+            creationParams: null,
+            creationParamsCodec: const StandardMessageCodec(),
+            onPlatformViewCreated: (int id) {
+              setState(() {
+                _viewId2 = id;
+              });
+            },
+          )
+              : AndroidView(
+            viewType: 'targetvideo/player_video_view',
+            creationParams: null,
+            creationParamsCodec: const StandardMessageCodec(),
+            onPlatformViewCreated: (int id) {
+              setState(() {
+                _viewId2 = id;
+              });
+            },
+          ),
+        ),
         ElevatedButton(
           onPressed: _loadVideo,
           child: const Text('Load Video'),
+        ),
+        ElevatedButton(
+          onPressed: _loadVideo2,
+          child: const Text('Load Video2'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            try {
+              await TargetvideoFlutterPlugin.pauseVideo("first");
+            } on PlatformException catch (e) {
+              print("Failed to pause video: '${e.message}'.");
+            }
+          },
+          child: const Text('pause first'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            try {
+              await TargetvideoFlutterPlugin.pauseVideo("second");
+            } on PlatformException catch (e) {
+              print("Failed to pause video: '${e.message}'.");
+            }
+          },
+          child: const Text('pause second'),
         ),
       ],
     );

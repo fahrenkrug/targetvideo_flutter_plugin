@@ -12,11 +12,124 @@ class MockTargetvideoFlutterPluginPlatform
   Future<String?> getPlatformVersion() => Future.value('42');
 
   @override
+  Future<void> createPlayer(String playerReference) {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> loadVideo(int playerId, int videoId, int viewId) {
     // TODO: implement loadVideo
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> loadPlaylist(int playerId, int playlistId, int viewId, String playerReference) {
+    // TODO: implement loadVideo
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> pauseVideo(String playerReference) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> playVideo() {
+    // TODO: implement playVideo
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> previous() {
+    // TODO: implement previous
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> next() {
+    // TODO: implement next
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> mute() {
+    // TODO: implement mute
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> unMute() {
+    // TODO: implement unMute
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setFullscreen(bool fullscreen) {
+    // TODO: implement setFullscreen
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> showControls() {
+    // TODO: implement showControls
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> hideControls() {
+    // TODO: implement hideControls
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> isAdPlaying() async {
+    // TODO: implement isAdPlaying
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<int?> getPlayerCurrentTime() async {
+    // TODO: implement getPlayerCurrentTime
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<int?> getAdDuration() async {
+    // TODO: implement getAdDuration
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<int?> getVideoDuration() async {
+    // TODO: implement getVideoDuration
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> isPaused() async {
+    // TODO: implement isPaused
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> isRepeated() async {
+    // TODO: implement isRepeated
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> destroyPlayer() {
+    // TODO: implement destroyPlayer
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> isAutoplay() async {
+    // TODO: implement isAutoplay
+    throw UnimplementedError();
+  }
 }
+
 
 void main() {
   final TargetvideoFlutterPluginPlatform initialPlatform = TargetvideoFlutterPluginPlatform.instance;
