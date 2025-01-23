@@ -3,11 +3,9 @@ import UIKit
 import BridSDK
 
 public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
-    var player: BVPlayer?
     var listOfPlayers: [String: BVPlayer?] = [:]
     private let videoViewFactory: NativeVideoViewFactory
     
-    // Ensure the initializer is internal to avoid the access level issue
     public init(videoViewFactory: NativeVideoViewFactory) {
         self.videoViewFactory = videoViewFactory
         super.init()
@@ -29,61 +27,117 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
         case "loadVideo":
             handleLoadVideo(call: call, result: result)
         case "createPlayer":
-            guard let args = call.arguments as? [String: Any],
-                  let playerReference = args["playerReference"] as? String else { return }
-            listOfPlayers[playerReference] = nil
+            if let playerReference = getPlayerReference(call: call) {
+                listOfPlayers[playerReference] = nil
+            }
             result(nil)
         case "loadPlaylist":
             handleLoadPlaylist(call: call, result: result)
         case "pauseVideo":
-            guard let args = call.arguments as? [String: Any],
-                  let playerReference = args["playerReference"] as? String else { return }
-            
-            if let playerr = listOfPlayers[playerReference] {
-                playerr?.pause()
+            if let player = getPlayerWithReference(call: call) {
+                player.pause()
             }
             result(nil)
         case "playVideo":
-            player?.play()
+            if let player = getPlayerWithReference(call: call) {
+                player.play()
+            }
             result(nil)
         case "previous":
-            player?.previous()
+            if let player = getPlayerWithReference(call: call) {
+                player.previous()
+            }
             result(nil)
         case "next":
-            player?.next()
+            if let player = getPlayerWithReference(call: call) {
+                player.next()
+            }
             result(nil)
         case "mute":
-            player?.mute()
+            if let player = getPlayerWithReference(call: call) {
+                player.mute()
+            }
             result(nil)
         case "unMute":
-            player?.unmute()
+            if let player = getPlayerWithReference(call: call) {
+                player.unmute()
+            }
             result(nil)
         case "setFullscreen":
-            player?.setFullscreenON()
+            if let args = call.arguments as? [String: Any],
+               let fullscreen = args["fullscreen"] as? Bool,
+               let player = getPlayerWithReference(call: call) {
+                if fullscreen {
+                    player.setFullscreenON()
+                } else {
+                    player.setFullscreenOFF()
+                }
+            }
             result(nil)
         case "showControls":
-            player?.showControls()
+            if let player = getPlayerWithReference(call: call) {
+                player.showControls()
+            }
             result(nil)
         case "hideControls":
-            player?.hideControls()
+            if let player = getPlayerWithReference(call: call) {
+                player.hideControls()
+            }
             result(nil)
         case "isAdPlaying":
-            result(player?.isAdInProgress())
+            if let player = getPlayerWithReference(call: call) {
+                let isAdPlaying = player.isAdInProgress()
+                result(isAdPlaying)
+            } else {
+                result(nil)
+            }
         case "getPlayerCurrentTime":
-            result(player?.getCurrentTime())
+            if let player = getPlayerWithReference(call: call) {
+                let currentTime = player.getCurrentTime()
+                result(currentTime)
+            } else {
+                result(nil)
+            }
         case "getAdDuration":
-            result(player?.getAdDuration())
+            if let player = getPlayerWithReference(call: call) {
+                let adDuration = player.getAdDuration()
+                result(adDuration)
+            } else {
+                result(nil)
+            }
         case "getVideoDuration":
-            result(player?.getDuration())
+            if let player = getPlayerWithReference(call: call) {
+                let duration = player.getDuration()
+                result(duration)
+            } else {
+                result(nil)
+            }
         case "isPaused":
-            result(player?.isPaused())
+            if let player = getPlayerWithReference(call: call) {
+                let isPaused = player.isPaused()
+                result(isPaused)
+            } else {
+                result(nil)
+            }
         case "isRepeated":
-            result(player?.isRepeated())
+            if let player = getPlayerWithReference(call: call) {
+                let isRepeated = player.isRepeated()
+                result(isRepeated)
+            } else {
+                result(nil)
+            }
         case "destroyPlayer":
-            player?.destroy()
+            if let player = getPlayerWithReference(call: call) {
+                player.destroy()
+            }
             result(nil)
         case "isAutoplay":
-            result(player?.isAutoplay())
+            if let player = getPlayerWithReference(call: call) {
+                let isAutoplay = player.isAutoplay()
+                result(isAutoplay)
+            } else {
+                result(nil)
+            }
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -131,12 +185,27 @@ public class NativeVideoView: NSObject, FlutterPlatformView {
 }
 
 extension TargetvideoFlutterPlugin {
+    
+    private func getPlayerReference(call: FlutterMethodCall) -> String? {
+        guard let args = call.arguments as? [String: Any],
+              let playerReference = args["playerReference"] as? String else { return nil }
+        return playerReference
+    }
+    
+    private func getPlayerWithReference(call: FlutterMethodCall) -> BVPlayer? {
+        guard let args = call.arguments as? [String: Any],
+              let playerReference = args["playerReference"] as? String,
+              let player = listOfPlayers[playerReference] else { return nil }
+        return player
+    }
+    
     private func handleLoadVideo(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let playerView = UIView()
         guard let args = call.arguments as? [String: Any],
               let viewId = args["viewId"] as? Int64,
               let playerId = args["playerId"] as? Int,
               let videoId = args["videoId"] as? Int,
+              let playerReference = getPlayerReference(call: call),
               let view = videoViewFactory.getView(byId: viewId) else {
             result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments or view not found", details: nil))
             return
@@ -155,7 +224,7 @@ extension TargetvideoFlutterPlugin {
             ])
             
             let data = BVData(playerID: Int32(playerId), forVideoID: Int32(videoId))
-            self.player = BVPlayer(data: data, for: playerView)
+            self.listOfPlayers[playerReference] = BVPlayer(data: data, for: playerView)
         }
         result(nil)
     }

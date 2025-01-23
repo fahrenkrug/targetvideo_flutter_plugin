@@ -10,8 +10,8 @@ class TargetvideoFlutterPlugin {
     await TargetvideoFlutterPluginPlatform.instance.createPlayer(playerReference);
   }
 
-  static Future<void> loadVideo(int playerId, int videoId, int viewId) async {
-    await TargetvideoFlutterPluginPlatform.instance.loadVideo(playerId, videoId, viewId);
+  static Future<void> loadVideo(int playerId, int videoId, int viewId, String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.loadVideo(playerId, videoId, viewId, playerReference);
   }
 
   static Future<void> loadPlaylist(int playerId, int playlistId, int viewId, String playerReference) async {
@@ -22,67 +22,67 @@ class TargetvideoFlutterPlugin {
     await TargetvideoFlutterPluginPlatform.instance.pauseVideo(playerReference);
   }
 
-  static Future<void> playVideo() async {
-    await TargetvideoFlutterPluginPlatform.instance.playVideo();
+  static Future<void> playVideo(String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.playVideo(playerReference);
   }
 
-  static Future<void> previous() async {
-    await TargetvideoFlutterPluginPlatform.instance.previous();
+  static Future<void> previous(String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.previous(playerReference);
   }
 
-  static Future<void> next() async {
-    await TargetvideoFlutterPluginPlatform.instance.next();
+  static Future<void> next(String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.next(playerReference);
   }
 
-  static Future<void> mute() async {
-    await TargetvideoFlutterPluginPlatform.instance.mute();
+  static Future<void> mute(String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.mute(playerReference);
   }
 
-  static Future<void> unMute() async {
-    await TargetvideoFlutterPluginPlatform.instance.unMute();
+  static Future<void> unMute(String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.unMute(playerReference);
   }
 
-  static Future<void> setFullscreen(bool fullscreen) async {
-    await TargetvideoFlutterPluginPlatform.instance.setFullscreen(fullscreen);
+  static Future<void> setFullscreen(bool fullscreen, String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.setFullscreen(fullscreen, playerReference);
   }
 
-  static Future<void> showControls() async {
-    await TargetvideoFlutterPluginPlatform.instance.showControls();
+  static Future<void> showControls(String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.showControls(playerReference);
   }
 
-  static Future<void> hideControls() async {
-    await TargetvideoFlutterPluginPlatform.instance.hideControls();
+  static Future<void> hideControls(String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.hideControls(playerReference);
   }
 
-  static Future<bool> isAdPlaying() async {
-    return await TargetvideoFlutterPluginPlatform.instance.isAdPlaying();
+  static Future<bool?> isAdPlaying(String playerReference) async {
+    return await TargetvideoFlutterPluginPlatform.instance.isAdPlaying(playerReference);
   }
 
-  static Future<num?> getPlayerCurrentTime() async {
-    return await TargetvideoFlutterPluginPlatform.instance.getPlayerCurrentTime();
+  static Future<num?> getPlayerCurrentTime(String playerReference) async {
+    return await TargetvideoFlutterPluginPlatform.instance.getPlayerCurrentTime(playerReference);
   }
 
-  static Future<num?> getAdDuration() async {
-    return await TargetvideoFlutterPluginPlatform.instance.getAdDuration();
+  static Future<num?> getAdDuration(String playerReference) async {
+    return await TargetvideoFlutterPluginPlatform.instance.getAdDuration(playerReference);
   }
 
-  static Future<num?> getVideoDuration() async {
-    return await TargetvideoFlutterPluginPlatform.instance.getVideoDuration();
+  static Future<num?> getVideoDuration(String playerReference) async {
+    return await TargetvideoFlutterPluginPlatform.instance.getVideoDuration(playerReference);
   }
 
-  static Future<bool> isPaused() async {
-    return await TargetvideoFlutterPluginPlatform.instance.isPaused();
+  static Future<bool?> isPaused(String playerReference) async {
+    return await TargetvideoFlutterPluginPlatform.instance.isPaused(playerReference);
   }
 
-  static Future<bool> isRepeated() async {
-    return await TargetvideoFlutterPluginPlatform.instance.isRepeated();
+  static Future<bool?> isRepeated(String playerReference) async {
+    return await TargetvideoFlutterPluginPlatform.instance.isRepeated(playerReference);
   }
 
-  static Future<void> destroyPlayer() async {
-    await TargetvideoFlutterPluginPlatform.instance.destroyPlayer();
+  static Future<void> destroyPlayer(String playerReference) async {
+    await TargetvideoFlutterPluginPlatform.instance.destroyPlayer(playerReference);
   }
 
-  static Future<bool> isAutoplay() async {
-    return await TargetvideoFlutterPluginPlatform.instance.isAutoplay();
+  static Future<bool?> isAutoplay(String playerReference) async {
+    return await TargetvideoFlutterPluginPlatform.instance.isAutoplay(playerReference);
   }
 }

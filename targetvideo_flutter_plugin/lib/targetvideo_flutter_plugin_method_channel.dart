@@ -30,12 +30,13 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> loadVideo(int playerId, int videoId, int viewId) async {
+  Future<void> loadVideo(int playerId, int videoId, int viewId, String playerReference) async {
     try {
       await methodChannel.invokeMethod('loadVideo', {
         'playerId': playerId,
         'videoId': videoId,
         'viewId': viewId,
+        'playerReference': playerReference,
       });
     } on PlatformException catch (e) {
       debugPrint('Failed to load video: ${e.message}');
@@ -61,9 +62,7 @@ class MethodChannelTargetvideoFlutterPlugin
   @override
   Future<void> pauseVideo(String playerReference) async {
     try {
-      await methodChannel.invokeMethod('pauseVideo', {
-        'playerReference': playerReference,
-      });
+      await methodChannel.invokeMethod('pauseVideo', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to load playlist: ${e.message}');
       rethrow;
@@ -71,9 +70,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> playVideo() async {
+  Future<void> playVideo(String playerReference) async {
     try {
-      await methodChannel.invokeMethod('playVideo');
+      await methodChannel.invokeMethod('playVideo', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to play video: ${e.message}');
       rethrow;
@@ -81,9 +80,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> previous() async {
+  Future<void> previous(String playerReference) async {
     try {
-      await methodChannel.invokeMethod('previous');
+      await methodChannel.invokeMethod('previous', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to play previous video: ${e.message}');
       rethrow;
@@ -91,9 +90,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> next() async {
+  Future<void> next(String playerReference) async {
     try {
-      await methodChannel.invokeMethod('next');
+      await methodChannel.invokeMethod('next', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to play next video: ${e.message}');
       rethrow;
@@ -101,9 +100,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> mute() async {
+  Future<void> mute(String playerReference) async {
     try {
-      await methodChannel.invokeMethod('mute');
+      await methodChannel.invokeMethod('mute', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to mute video: ${e.message}');
       rethrow;
@@ -111,9 +110,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> unMute() async {
+  Future<void> unMute(String playerReference) async {
     try {
-      await methodChannel.invokeMethod('unMute');
+      await methodChannel.invokeMethod('unMute', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to unmute video: ${e.message}');
       rethrow;
@@ -121,7 +120,7 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> setFullscreen(bool fullscreen) async {
+  Future<void> setFullscreen(bool fullscreen, String playerReference) async {
     try {
       await methodChannel.invokeMethod('setFullscreen', {'fullscreen': fullscreen});
     } on PlatformException catch (e) {
@@ -131,9 +130,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> showControls() async {
+  Future<void> showControls(String playerReference) async {
     try {
-      await methodChannel.invokeMethod('showControls');
+      await methodChannel.invokeMethod('showControls', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to show controls: ${e.message}');
       rethrow;
@@ -141,9 +140,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> hideControls() async {
+  Future<void> hideControls(String playerReference) async {
     try {
-      await methodChannel.invokeMethod('hideControls');
+      await methodChannel.invokeMethod('hideControls', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to hide controls: ${e.message}');
       rethrow;
@@ -151,9 +150,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<bool> isAdPlaying() async {
+  Future<bool?> isAdPlaying(String playerReference) async {
     try {
-      return await methodChannel.invokeMethod<bool>('isAdPlaying') ?? false;
+      return await methodChannel.invokeMethod<bool>('isAdPlaying', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to check if ad is playing: ${e.message}');
       rethrow;
@@ -161,9 +160,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<num?> getPlayerCurrentTime() async {
+  Future<num?> getPlayerCurrentTime(String playerReference) async {
     try {
-      return await methodChannel.invokeMethod<num>('getPlayerCurrentTime');
+      return await methodChannel.invokeMethod<num>('getPlayerCurrentTime', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to get player current time: ${e.message}');
       rethrow;
@@ -171,9 +170,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<num?> getAdDuration() async {
+  Future<num?> getAdDuration(String playerReference) async {
     try {
-      return await methodChannel.invokeMethod<num>('getAdDuration');
+      return await methodChannel.invokeMethod<num>('getAdDuration', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to get ad duration: ${e.message}');
       rethrow;
@@ -181,9 +180,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<num?> getVideoDuration() async {
+  Future<num?> getVideoDuration(String playerReference) async {
     try {
-      return await methodChannel.invokeMethod<num>('getVideoDuration');
+      return await methodChannel.invokeMethod<num>('getVideoDuration', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to get video duration: ${e.message}');
       rethrow;
@@ -191,9 +190,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<bool> isPaused() async {
+  Future<bool?> isPaused(String playerReference) async {
     try {
-      return await methodChannel.invokeMethod<bool>('isPaused') ?? false;
+      return await methodChannel.invokeMethod<bool>('isPaused', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to check if video is paused: ${e.message}');
       rethrow;
@@ -201,9 +200,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<bool> isRepeated() async {
+  Future<bool?> isRepeated(String playerReference) async {
     try {
-      return await methodChannel.invokeMethod<bool>('isRepeated') ?? false;
+      return await methodChannel.invokeMethod<bool>('isRepeated', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to check if video is repeated: ${e.message}');
       rethrow;
@@ -211,9 +210,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<void> destroyPlayer() async {
+  Future<void> destroyPlayer(String playerReference) async {
     try {
-      await methodChannel.invokeMethod('destroyPlayer');
+      await methodChannel.invokeMethod('destroyPlayer', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to destroy player: ${e.message}');
       rethrow;
@@ -221,9 +220,9 @@ class MethodChannelTargetvideoFlutterPlugin
   }
 
   @override
-  Future<bool> isAutoplay() async {
+  Future<bool?> isAutoplay(String playerReference) async {
     try {
-      return await methodChannel.invokeMethod<bool>('isAutoplay') ?? false;
+      return await methodChannel.invokeMethod<bool>('isAutoplay', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to check autoplay: ${e.message}');
       rethrow;

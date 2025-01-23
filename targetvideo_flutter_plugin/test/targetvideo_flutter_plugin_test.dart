@@ -17,7 +17,7 @@ class MockTargetvideoFlutterPluginPlatform
   }
 
   @override
-  Future<void> loadVideo(int playerId, int videoId, int viewId) {
+  Future<void> loadVideo(int playerId, int videoId, int viewId, String playerReference) {
     // TODO: implement loadVideo
     throw UnimplementedError();
   }
@@ -34,97 +34,97 @@ class MockTargetvideoFlutterPluginPlatform
   }
 
   @override
-  Future<void> playVideo() {
+  Future<void> playVideo(String playerReference) {
     // TODO: implement playVideo
     throw UnimplementedError();
   }
 
   @override
-  Future<void> previous() {
+  Future<void> previous(String playerReference) {
     // TODO: implement previous
     throw UnimplementedError();
   }
 
   @override
-  Future<void> next() {
+  Future<void> next(String playerReference) {
     // TODO: implement next
     throw UnimplementedError();
   }
 
   @override
-  Future<void> mute() {
+  Future<void> mute(String playerReference) {
     // TODO: implement mute
     throw UnimplementedError();
   }
 
   @override
-  Future<void> unMute() {
+  Future<void> unMute(String playerReference) {
     // TODO: implement unMute
     throw UnimplementedError();
   }
 
   @override
-  Future<void> setFullscreen(bool fullscreen) {
+  Future<void> setFullscreen(bool fullscreen, String playerReference) {
     // TODO: implement setFullscreen
     throw UnimplementedError();
   }
 
   @override
-  Future<void> showControls() {
+  Future<void> showControls(String playerReference) {
     // TODO: implement showControls
     throw UnimplementedError();
   }
 
   @override
-  Future<void> hideControls() {
+  Future<void> hideControls(String playerReference) {
     // TODO: implement hideControls
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> isAdPlaying() async {
+  Future<bool> isAdPlaying(String playerReference) async {
     // TODO: implement isAdPlaying
     throw UnimplementedError();
   }
 
   @override
-  Future<int?> getPlayerCurrentTime() async {
+  Future<int?> getPlayerCurrentTime(String playerReference) async {
     // TODO: implement getPlayerCurrentTime
     throw UnimplementedError();
   }
 
   @override
-  Future<int?> getAdDuration() async {
+  Future<int?> getAdDuration(String playerReference) async {
     // TODO: implement getAdDuration
     throw UnimplementedError();
   }
 
   @override
-  Future<int?> getVideoDuration() async {
+  Future<int?> getVideoDuration(String playerReference) async {
     // TODO: implement getVideoDuration
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> isPaused() async {
+  Future<bool> isPaused(String playerReference) async {
     // TODO: implement isPaused
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> isRepeated() async {
+  Future<bool> isRepeated(String playerReference) async {
     // TODO: implement isRepeated
     throw UnimplementedError();
   }
 
   @override
-  Future<void> destroyPlayer() {
+  Future<void> destroyPlayer(String playerReference) {
     // TODO: implement destroyPlayer
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> isAutoplay() async {
+  Future<bool> isAutoplay(String playerReference) async {
     // TODO: implement isAutoplay
     throw UnimplementedError();
   }
