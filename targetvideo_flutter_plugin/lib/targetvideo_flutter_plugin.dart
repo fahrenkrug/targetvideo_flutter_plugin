@@ -85,4 +85,8 @@ class TargetvideoFlutterPlugin {
   static Future<bool?> isAutoplay(String playerReference) async {
     return await TargetvideoFlutterPluginPlatform.instance.isAutoplay(playerReference);
   }
+
+  static Stream<Map<String, dynamic>> get playerEvents {
+    return TargetvideoFlutterPluginPlatform.instance.playerEvents;
+  }
 }

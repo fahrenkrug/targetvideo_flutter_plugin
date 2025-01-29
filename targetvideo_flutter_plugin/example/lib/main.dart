@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:io';
 import 'package:targetvideo_flutter_plugin/targetvideo_flutter_plugin.dart';
 
 void main() {
@@ -33,6 +36,21 @@ class NativeVideoWidget extends StatefulWidget {
 class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   int? _viewId;
   final String _playerRef = "player1";
+
+  @override
+  void initState() {
+    super.initState();
+
+    TargetvideoFlutterPlugin.playerEvents.listen((event) {
+      if (event['event'] is String) {
+        final eventValue = event['event'] as String;
+
+        if (eventValue.contains('ref: $_playerRef')) {
+          print(event);
+        }
+      }
+    });
+  }
 
   Future<void> _loadVideo() async {
     if (_viewId == null) {
@@ -123,6 +141,7 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
                   },
                   child: const Text('Previous'),
                 ),
+
               ),
               SizedBox(
                 width: 100,

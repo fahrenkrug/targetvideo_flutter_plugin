@@ -4,6 +4,7 @@ import BridSDK
 
 public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
     var listOfPlayers: [String: BVPlayer?] = [:]
+    private var eventSink: FlutterEventSink?    
     private let videoViewFactory: NativeVideoViewFactory
     
     public init(videoViewFactory: NativeVideoViewFactory) {
@@ -13,11 +14,13 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "targetvideo_flutter_plugin", binaryMessenger: registrar.messenger())
+        let eventChannel = FlutterEventChannel(name: "targetvideo_flutter_plugin/events", binaryMessenger: registrar.messenger())
         let videoViewFactory = NativeVideoViewFactory()
         let instance = TargetvideoFlutterPlugin(videoViewFactory: videoViewFactory)
-        
+
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.register(videoViewFactory, withId: "targetvideo/player_video_view")
+        eventChannel.setStreamHandler(instance)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -184,6 +187,7 @@ public class NativeVideoView: NSObject, FlutterPlatformView {
     }
 }
 
+// MARK: - Private methods
 extension TargetvideoFlutterPlugin {
     
     private func getPlayerReference(call: FlutterMethodCall) -> String? {
@@ -224,7 +228,9 @@ extension TargetvideoFlutterPlugin {
             ])
             
             let data = BVData(playerID: Int32(playerId), forVideoID: Int32(videoId))
-            self.listOfPlayers[playerReference] = BVPlayer(data: data, for: playerView)
+            var player = BVPlayer(data: data, for: playerView)
+            player?.setPlayerReferenceName(playerReference)
+            self.listOfPlayers[playerReference] = player
         }
         result(nil)
     }
@@ -254,8 +260,61 @@ extension TargetvideoFlutterPlugin {
             ])
             
             let data = BVData(playerID: Int32(playerId), forPlaylistID: Int32(playlistId))
-            self.listOfPlayers[playerReference] = BVPlayer(data: data, for: playerView)
+            var player = BVPlayer(data: data, for: playerView)
+            player?.setPlayerReferenceName(playerReference)
+            self.listOfPlayers[playerReference] = player
         }
         result(nil)
+    }
+}
+
+// Extension for event streaming
+extension TargetvideoFlutterPlugin: FlutterStreamHandler {
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        self.eventSink = events
+        setupEventNetworking()
+        setupEventNetworkingForAd()
+        return nil
+    }
+
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        self.eventSink = nil
+        return nil
+    }
+
+    private func setupEventNetworking() {
+        NotificationCenter.default.addObserver(self, selector: #selector(eventWriter), name: NSNotification.Name(rawValue: "PlayerEvent"), object: nil)
+    }
+
+    private func setupEventNetworkingForAd() {
+        NotificationCenter.default.addObserver(self, selector: #selector(eventWriter), name: NSNotification.Name(rawValue: "AdEvent"), object: nil)
+    }
+
+    @objc private func eventWriter(_ notification: NSNotification) {
+        var eventDict: [String: Any] = [:]
+        var playerReference: String = "noRef"
+
+        if let reference = notification.userInfo?["reference"] as? String {
+            playerReference = reference
+        }
+
+        if notification.name.rawValue == "PlayerEvent" {
+
+            if let event = notification.userInfo?["event"] as? String {
+                eventDict["type"] = "PlayerEvent"
+                eventDict["event"] = event + " ref: " + playerReference
+            }
+        }
+
+        if notification.name.rawValue == "AdEvent" {
+            if let ad = notification.userInfo?["ad"] as? String {
+                eventDict["type"] = "AdEvent"
+                eventDict["ad"] = ad + " ref: " + playerReference
+            }
+        }
+
+        if let eventSink = self.eventSink {
+            eventSink(eventDict)
+        }
     }
 }

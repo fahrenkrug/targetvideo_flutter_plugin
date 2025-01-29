@@ -106,4 +106,8 @@ abstract class TargetvideoFlutterPluginPlatform extends PlatformInterface {
   Future<bool?> isAutoplay(String playerReference) {
     throw UnimplementedError('isAutoplay() has not been implemented.');
   }
+
+  Stream<Map<String, dynamic>> get playerEvents {
+    throw UnimplementedError('events has not been implemented.');
+  }
 }

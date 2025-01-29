@@ -128,8 +128,12 @@ class MockTargetvideoFlutterPluginPlatform
     // TODO: implement isAutoplay
     throw UnimplementedError();
   }
-}
 
+  @override
+  Stream<Map<String, dynamic>> get playerEvents {
+    throw UnimplementedError();
+  }
+}
 
 void main() {
   final TargetvideoFlutterPluginPlatform initialPlatform = TargetvideoFlutterPluginPlatform.instance;

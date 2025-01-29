@@ -9,6 +9,8 @@ class MethodChannelTargetvideoFlutterPlugin
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('targetvideo_flutter_plugin');
+  static const _eventChannel = EventChannel('targetvideo_flutter_plugin/events');
+  static Stream<Map<String, dynamic>>? _eventStream;
 
   @override
   Future<String?> getPlatformVersion() async {
@@ -227,5 +229,13 @@ class MethodChannelTargetvideoFlutterPlugin
       debugPrint('Failed to check autoplay: ${e.message}');
       rethrow;
     }
+  }
+
+  @override
+  Stream<Map<String, dynamic>> get playerEvents {
+    _eventStream ??= _eventChannel.receiveBroadcastStream().map((event) {
+      return Map<String, dynamic>.from(event);
+    });
+    return _eventStream!;
   }
 }
