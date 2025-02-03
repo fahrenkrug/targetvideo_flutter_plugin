@@ -4,7 +4,7 @@ import BridSDK
 
 public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
     var listOfPlayers: [String: BVPlayer?] = [:]
-    private var eventSink: FlutterEventSink?    
+    private var eventSink: FlutterEventSink?
     private let videoViewFactory: NativeVideoViewFactory
     
     public init(videoViewFactory: NativeVideoViewFactory) {
@@ -25,15 +25,8 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "getPlatformVersion":
-            result("iOS " + UIDevice.current.systemVersion)
         case "loadVideo":
             handleLoadVideo(call: call, result: result)
-        case "createPlayer":
-            if let playerReference = getPlayerReference(call: call) {
-                listOfPlayers[playerReference] = nil
-            }
-            result(nil)
         case "loadPlaylist":
             handleLoadPlaylist(call: call, result: result)
         case "pauseVideo":
@@ -141,6 +134,13 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(nil)
             }
+        case "setLocalization":
+            if let args = call.arguments as? [String: Any],
+               let localization = args["localization"] as? String,
+               let player = getPlayerWithReference(call: call) {
+               player.setPlayerLanguage(localization)
+            }
+            result(nil)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -302,14 +302,14 @@ extension TargetvideoFlutterPlugin: FlutterStreamHandler {
 
             if let event = notification.userInfo?["event"] as? String {
                 eventDict["type"] = "PlayerEvent"
-                eventDict["event"] = event + " ref: " + playerReference
+                eventDict["event"] = event
             }
         }
 
         if notification.name.rawValue == "AdEvent" {
             if let ad = notification.userInfo?["ad"] as? String {
                 eventDict["type"] = "AdEvent"
-                eventDict["ad"] = ad + " ref: " + playerReference
+                eventDict["ad"] = ad
             }
         }
 

@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:targetvideo_flutter_plugin/targetvideo_flutter_plugin.dart';
 import 'package:targetvideo_flutter_plugin/targetvideo_flutter_plugin_platform_interface.dart';
 import 'package:targetvideo_flutter_plugin/targetvideo_flutter_plugin_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -9,10 +8,7 @@ class MockTargetvideoFlutterPluginPlatform
     implements TargetvideoFlutterPluginPlatform {
 
   @override
-  Future<String?> getPlatformVersion() => Future.value('42');
-
-  @override
-  Future<void> createPlayer(String playerReference) {
+  Future<void> buildPlayer(String? language, int? seekSeconds, String playerReference) {
     throw UnimplementedError();
   }
 
@@ -130,6 +126,12 @@ class MockTargetvideoFlutterPluginPlatform
   }
 
   @override
+  Future<bool> setLocalization(String localization) async {
+    // TODO: implement isAutoplay
+    throw UnimplementedError();
+  }
+
+  @override
   Stream<Map<String, dynamic>> get playerEvents {
     throw UnimplementedError();
   }
@@ -140,13 +142,5 @@ void main() {
 
   test('$MethodChannelTargetvideoFlutterPlugin is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelTargetvideoFlutterPlugin>());
-  });
-
-  test('getPlatformVersion', () async {
-    TargetvideoFlutterPlugin targetvideoFlutterPlugin = TargetvideoFlutterPlugin();
-    MockTargetvideoFlutterPluginPlatform fakePlatform = MockTargetvideoFlutterPluginPlatform();
-    TargetvideoFlutterPluginPlatform.instance = fakePlatform;
-
-    expect(await targetvideoFlutterPlugin.getPlatformVersion(), '42');
   });
 }

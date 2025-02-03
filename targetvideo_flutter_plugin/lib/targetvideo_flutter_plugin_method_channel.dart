@@ -13,25 +13,6 @@ class MethodChannelTargetvideoFlutterPlugin
   static Stream<Map<String, dynamic>>? _eventStream;
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
-  }
-
-  @override
-  Future<void> createPlayer(String playerReference) async {
-    try {
-      await methodChannel.invokeMethod('createPlayer', {
-        'playerReference': playerReference,
-      });
-    } on PlatformException catch (e) {
-      debugPrint('Failed to create player: ${e.message}');
-      rethrow;
-    }
-  }
-
-  @override
   Future<void> loadVideo(int playerId, int videoId, int viewId, String playerReference) async {
     try {
       await methodChannel.invokeMethod('loadVideo', {
@@ -227,6 +208,16 @@ class MethodChannelTargetvideoFlutterPlugin
       return await methodChannel.invokeMethod<bool>('isAutoplay', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to check autoplay: ${e.message}');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> setLocalization(String language) async {
+    try {
+      return await methodChannel.invokeMethod<void>('setLocalization', {'language': language});
+    } on PlatformException catch (e) {
+      debugPrint('Failed to set localization: ${e.message}');
       rethrow;
     }
   }

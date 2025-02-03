@@ -23,14 +23,6 @@ abstract class TargetvideoFlutterPluginPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
-  }
-
-  Future<void> createPlayer(String playerReference) {
-    throw UnimplementedError('createPlayer() has not been implemented');
-  }
-
   Future<void> loadVideo(int playerId, int videoId, int viewId, String playerReference) {
     throw UnimplementedError('loadVideo() has not been implemented.');
   }
@@ -104,6 +96,10 @@ abstract class TargetvideoFlutterPluginPlatform extends PlatformInterface {
   }
 
   Future<bool?> isAutoplay(String playerReference) {
+    throw UnimplementedError('isAutoplay() has not been implemented.');
+  }
+
+  Future<void> setLocalization(String language) {
     throw UnimplementedError('isAutoplay() has not been implemented.');
   }
 

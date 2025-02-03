@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:targetvideo_flutter_plugin/targetvideo_flutter_plugin.dart';
+import 'package:targetvideo_flutter_plugin/targetvideo_player.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,34 +34,17 @@ class NativeVideoWidget extends StatefulWidget {
 
 class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   int? _viewId;
-  final String _playerRef = "player1";
+  int? _viewId2;
+  TargetVideoPlayer player1 = TargetVideoPlayer(playerReference: "player1");
+  TargetVideoPlayer player2 = TargetVideoPlayer(playerReference: "player2");
 
   @override
   void initState() {
     super.initState();
-
-    TargetvideoFlutterPlugin.playerEvents.listen((event) {
-      if (event['event'] is String) {
-        final eventValue = event['event'] as String;
-
-        if (eventValue.contains('ref: $_playerRef')) {
-          print(event);
-        }
-      }
+    player1.handleAllPlayerEvents((event) {
+      print(event);
+      // Add your custom event handling logic here
     });
-  }
-
-  Future<void> _loadVideo() async {
-    if (_viewId == null) {
-      print("View ID is not available yet.");
-      return;
-    }
-
-    try {
-      await TargetvideoFlutterPlugin.loadPlaylist(45852, 24090, _viewId!, _playerRef);
-    } on PlatformException catch (e) {
-      print("Failed to load video: '${e.message}'.");
-    }
   }
 
   @override
@@ -103,6 +85,32 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
               },
             ),
           ),
+          Container(
+            width: platformViewWidth,
+            height: platformViewHeight,
+            margin: const EdgeInsets.only(bottom: 16.0),
+            child: Platform.isIOS
+                ? UiKitView(
+              viewType: 'targetvideo/player_video_view',
+              creationParams: null,
+              creationParamsCodec: const StandardMessageCodec(),
+              onPlatformViewCreated: (int id) {
+                setState(() {
+                  _viewId2 = id;
+                });
+              },
+            )
+                : AndroidView(
+              viewType: 'targetvideo/player_video_view',
+              creationParams: null,
+              creationParamsCodec: const StandardMessageCodec(),
+              onPlatformViewCreated: (int id) {
+                setState(() {
+                  _viewId2 = id;
+                });
+              },
+            ),
+          ),
           Wrap(
             spacing: 8.0,
             runSpacing: 8.0,
@@ -111,8 +119,27 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
               SizedBox(
                 width: 100,
                 child: ElevatedButton(
-                  onPressed: _loadVideo,
-                  child: const Text('Load video'),
+                  onPressed: () async {
+                    try {
+                      await player1.loadPlaylist(45852, 24090, _viewId!);
+                    } on PlatformException catch (e) {
+                      print({e.message});
+                    }
+                  },
+                  child: const Text('load video'),
+                ),
+                ),
+              SizedBox(
+                width: 100,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await player2.loadPlaylist(45852, 24090, _viewId2!);
+                    } on PlatformException catch (e) {
+                      print({e.message});
+                    }
+                  },
+                  child: const Text('load video 2'),
                 ),
               ),
               SizedBox(
@@ -120,13 +147,17 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
                 child: ElevatedButton(
                   onPressed: () async {
                     try {
-                      await TargetvideoFlutterPlugin.playVideo(_playerRef);
-                      print("Restarted video");
+                      bool? isPaused = await player1.isPaused();
+                      if (isPaused == true) {
+                        player1.playVideo();
+                      } else {
+                        player1.pauseVideo();
+                      }
                     } on PlatformException catch (e) {
-                      print("Failed to restart video: '${e.message}'.");
+                      print({e.message});
                     }
                   },
-                  child: const Text('Play'),
+                  child: const Text('play/pause 1'),
                 ),
               ),
               SizedBox(
@@ -134,107 +165,13 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
                 child: ElevatedButton(
                   onPressed: () async {
                     try {
-                      await TargetvideoFlutterPlugin.previous(_playerRef);
+                      bool? isPaused = await player2.isPaused();
+                      isPaused == true ? player2.playVideo() : player2.pauseVideo();
                     } on PlatformException catch (e) {
-                      print("Failed to play previous video: '${e.message}'.");
+                      print({e.message});
                     }
                   },
-                  child: const Text('Previous'),
-                ),
-
-              ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await TargetvideoFlutterPlugin.next(_playerRef);
-                    } on PlatformException catch (e) {
-                      print("Failed to play next video: '${e.message}'.");
-                    }
-                  },
-                  child: const Text('Next'),
-                ),
-              ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      final duration = await TargetvideoFlutterPlugin.getVideoDuration(_playerRef);
-                      print("Video duration: $duration");
-                    } on PlatformException catch (e) {
-                      print("Failed to unmute video: '${e.message}'.");
-                    }
-                  },
-                  child: const Text('Get duration'),
-                ),
-              ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await TargetvideoFlutterPlugin.mute(_playerRef);
-                    } on PlatformException catch (e) {
-                      print("Failed to mute: '${e.message}'.");
-                    }
-                  },
-                  child: const Text('Mute'),
-                ),
-              ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await TargetvideoFlutterPlugin.unMute(_playerRef);
-                    } on PlatformException catch (e) {
-                      print("Failed to unMute: '${e.message}'.");
-                    }
-                  },
-                  child: const Text('unMute'),
-                ),
-              ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await TargetvideoFlutterPlugin.pauseVideo(_playerRef);
-                      print("Paused video");
-                    } on PlatformException catch (e) {
-                      print("Failed to pause video: '${e.message}'.");
-                    }
-                  },
-                  child: const Text('Pause'),
-                ),
-              ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await TargetvideoFlutterPlugin.playVideo(_playerRef);
-                      print("Restarted video");
-                    } on PlatformException catch (e) {
-                      print("Failed to restart video: '${e.message}'.");
-                    }
-                  },
-                  child: const Text('Play'),
-                ),
-              ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await TargetvideoFlutterPlugin.destroyPlayer(_playerRef);
-                    } on PlatformException catch (e) {
-                      print("Failed to seek to destroy: '${e.message}'.");
-                    }
-                  },
-                  child: const Text('Destroy'),
+                  child: const Text('play/pause 2'),
                 ),
               ),
             ],
