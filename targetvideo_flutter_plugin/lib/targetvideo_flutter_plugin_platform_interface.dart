@@ -23,12 +23,20 @@ abstract class TargetvideoFlutterPluginPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> loadVideo(int playerId, int videoId, int viewId, String playerReference) {
+  Future<void> load(
+      int playerId,
+      int mediaId,
+      String typeOfPlayer,
+      bool? controlAutoplay,
+      bool? scrollOnAd,
+      String? creditsLabelColor,
+      int? setCornerRadius,
+      String? localization,
+      int? doubleTapSeek,
+      int? seekPreview,
+      int viewId,
+      String playerReference) {
     throw UnimplementedError('loadVideo() has not been implemented.');
-  }
-
-  Future<void> loadPlaylist(int playerId, int playlistId, int viewId, String playerReference) {
-    throw UnimplementedError('loadPlaylist() has not been implemented.');
   }
 
   Future<void> pauseVideo(String playerReference) {

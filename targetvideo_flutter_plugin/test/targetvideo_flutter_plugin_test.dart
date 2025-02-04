@@ -8,19 +8,20 @@ class MockTargetvideoFlutterPluginPlatform
     implements TargetvideoFlutterPluginPlatform {
 
   @override
-  Future<void> buildPlayer(String? language, int? seekSeconds, String playerReference) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> loadVideo(int playerId, int videoId, int viewId, String playerReference) {
-    // TODO: implement loadVideo
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> loadPlaylist(int playerId, int playlistId, int viewId, String playerReference) {
-    // TODO: implement loadVideo
+  Future<void> load(
+      int playerId,
+      int mediaId,
+      String typeOfPlayer,
+      bool? controlAutoplay,
+      bool? scrollOnAd,
+      String? creditsLabelColor,
+      int? setCornerRadius,
+      String? localization,
+      int? doubleTapSeek,
+      int? seekPreview,
+      int viewId,
+      String playerReference) {
+    // TODO: implement load
     throw UnimplementedError();
   }
 

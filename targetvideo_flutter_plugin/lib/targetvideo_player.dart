@@ -9,12 +9,33 @@ class TargetVideoPlayer {
   });
 
   // Player methods
-  Future<void> loadVideo(int playerId, int videoId, int viewId) async {
-    await TargetvideoFlutterPluginPlatform.instance.loadVideo(playerId, videoId, viewId, playerReference);
-  }
+  Future<void> load({
+    required int playerId,
+    required int mediaId,
+    required String typeOfPlayer,
+    required int viewId,
+    bool? controlAutoplay,
+    bool? scrollOnAd,
+    String? creditsLabelColor,
+    int? setCornerRadius,
+    String? localization,
+    int? doubleTapSeek,
+    int? seekPreview,
+  }) async {
 
-  Future<void> loadPlaylist(int playerId, int playlistId, int viewId) async {
-    await TargetvideoFlutterPluginPlatform.instance.loadPlaylist(playerId, playlistId, viewId, playerReference);
+    await TargetvideoFlutterPluginPlatform.instance.load(
+        playerId,
+        mediaId,
+        typeOfPlayer,
+        controlAutoplay,
+        scrollOnAd,
+        creditsLabelColor,
+        setCornerRadius,
+        localization,
+        doubleTapSeek,
+        seekPreview,
+        viewId,
+        playerReference);
   }
 
   Future<void> pauseVideo() async {
@@ -87,7 +108,7 @@ class TargetVideoPlayer {
 
   void handleAllPlayerEvents(Function(dynamic event) onEvent) {
     _playerEvents.listen((event) {
-      if (event['event'] is String) {
+      if (event['playerReference'] == playerReference) {
         onEvent(event);
       }
     });

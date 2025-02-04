@@ -13,31 +13,37 @@ class MethodChannelTargetvideoFlutterPlugin
   static Stream<Map<String, dynamic>>? _eventStream;
 
   @override
-  Future<void> loadVideo(int playerId, int videoId, int viewId, String playerReference) async {
+  Future<void> load(
+      int playerId,
+      int mediaId,
+      String typeOfPlayer,
+      bool? controlAutoplay,
+      bool? scrollOnAd,
+      String? creditsLabelColor,
+      int? setCornerRadius,
+      String? localization,
+      int? doubleTapSeek,
+      int? seekPreview,
+      int viewId,
+      String playerReference) async {
+
     try {
-      await methodChannel.invokeMethod('loadVideo', {
+      await methodChannel.invokeMethod('load', {
         'playerId': playerId,
-        'videoId': videoId,
+        'mediaId': mediaId,
+        'typeOfPlayer': typeOfPlayer,
+        'controlAutoplay': controlAutoplay,
+        'scrollOnAd': scrollOnAd,
+        'creditsLabelColor': creditsLabelColor,
+        'setCornerRadius': setCornerRadius,
+        'localization': localization,
+        'doubleTapSeek': doubleTapSeek,
+        'seekPreview': seekPreview,
         'viewId': viewId,
         'playerReference': playerReference,
       });
     } on PlatformException catch (e) {
       debugPrint('Failed to load video: ${e.message}');
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> loadPlaylist(int playerId, int playlistId, int viewId, String playerReference) async {
-    try {
-      await methodChannel.invokeMethod('loadPlaylist', {
-        'playerId': playerId,
-        'playlistId': playlistId,
-        'viewId': viewId,
-        'playerReference': playerReference,
-      });
-    } on PlatformException catch (e) {
-      debugPrint('Failed to load playlist: ${e.message}');
       rethrow;
     }
   }

@@ -17,7 +17,7 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
         let eventChannel = FlutterEventChannel(name: "targetvideo_flutter_plugin/events", binaryMessenger: registrar.messenger())
         let videoViewFactory = NativeVideoViewFactory()
         let instance = TargetvideoFlutterPlugin(videoViewFactory: videoViewFactory)
-
+        
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.register(videoViewFactory, withId: "targetvideo/player_video_view")
         eventChannel.setStreamHandler(instance)
@@ -25,10 +25,8 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "loadVideo":
-            handleLoadVideo(call: call, result: result)
-        case "loadPlaylist":
-            handleLoadPlaylist(call: call, result: result)
+        case "load":
+            load(call: call, result: result)
         case "pauseVideo":
             if let player = getPlayerWithReference(call: call) {
                 player.pause()
@@ -138,7 +136,7 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
             if let args = call.arguments as? [String: Any],
                let localization = args["localization"] as? String,
                let player = getPlayerWithReference(call: call) {
-               player.setPlayerLanguage(localization)
+                player.setPlayerLanguage(localization)
             }
             result(nil)
         default:
@@ -147,44 +145,9 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
     }
 }
 
-public class NativeVideoViewFactory: NSObject, FlutterPlatformViewFactory {
-    private var views: [Int64: NativeVideoView] = [:]
-    
-    public override init() {
-        super.init()
-    }
-    
-    public func create(
-        withFrame frame: CGRect,
-        viewIdentifier viewId: Int64,
-        arguments args: Any?
-    ) -> FlutterPlatformView {
-        let view = NativeVideoView(frame: frame)
-        views[viewId] = view
-        return view
-    }
-    
-    public func getView(byId viewId: Int64) -> UIView? {
-        return views[viewId]?.view()
-    }
-}
-
-public class NativeVideoView: NSObject, FlutterPlatformView {
-    private let containerView: UIView
-    
-    public init(frame: CGRect) {
-        self.containerView = UIView(frame: frame)
-        super.init()
-        setupView()
-    }
-    
-    private func setupView() {
-        containerView.backgroundColor = .lightGray
-    }
-    
-    public func view() -> UIView {
-        return containerView
-    }
+enum MediaType: String {
+    case single = "Single"
+    case playlist = "Playlist"
 }
 
 // MARK: - Private methods
@@ -203,21 +166,51 @@ extension TargetvideoFlutterPlugin {
         return player
     }
     
-    private func handleLoadVideo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func load(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let playerView = UIView()
         guard let args = call.arguments as? [String: Any],
-              let viewId = args["viewId"] as? Int64,
-              let playerId = args["playerId"] as? Int,
-              let videoId = args["videoId"] as? Int,
               let playerReference = getPlayerReference(call: call),
-              let view = videoViewFactory.getView(byId: viewId) else {
+              let viewId = args["viewId"] as? Int,
+              let view = videoViewFactory.getView(byId: Int64(viewId)) else {
             result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments or view not found", details: nil))
             return
         }
         
+        let playerId = args["playerId"] as? Int ?? 0
+        let mediaId = args["mediaId"] as? Int ?? 0
+        let typeOfPlayer = args["typeOfPlayer"] as? String ?? "Single"
+        let controlAutoplay = args["controlAutoplay"] as? Bool ?? false
+        let scrollOnAd = args["scrollOnAd"] as? Bool ?? false
+        let creditsLabelColor = args["creditsLabelColor"] as? String
+        let setCornerRadius = args["setCornerRadius"] as? Int ?? 0
+        let localization = args["localization"] as? String
+        let doubleTapSeek = args["doubleTapSeek"] as? Int ?? 0
+        let seekPreview = args["seekPreview"] as? Int ?? 1
+        
+        if typeOfPlayer == MediaType.single.rawValue {
+            loadSingle(view, playerView, playerId, mediaId, playerReference, controlAutoplay, scrollOnAd, creditsLabelColor, setCornerRadius, localization, doubleTapSeek, seekPreview)
+        } else if typeOfPlayer == MediaType.playlist.rawValue {
+            loadPlaylist(view, playerView, playerId, mediaId, playerReference, controlAutoplay, scrollOnAd, creditsLabelColor, setCornerRadius, localization, doubleTapSeek, seekPreview)
+        } else {
+            return
+        }
+    }
+    
+    private func loadSingle(_ view: UIView,
+                            _ playerView: UIView,
+                            _ playerId: Int,
+                            _ videoId: Int,
+                            _ playerReference: String,
+                            _ controlAutoplay: Bool,
+                            _ scrollOnAd: Bool,
+                            _ creditsLabelColor: String?,
+                            _ setCornerRadius: Int,
+                            _ localization: String?,
+                            _ doubleTapSeek: Int,
+                            _ seekPreview: Int) {
+        
         DispatchQueue.main.async {
             playerView.translatesAutoresizingMaskIntoConstraints = false
-            playerView.backgroundColor = .red
             view.addSubview(playerView)
             
             NSLayoutConstraint.activate([
@@ -228,28 +221,38 @@ extension TargetvideoFlutterPlugin {
             ])
             
             let data = BVData(playerID: Int32(playerId), forVideoID: Int32(videoId))
-            var player = BVPlayer(data: data, for: playerView)
+            let player = BVPlayer(data: data, for: playerView)
             player?.setPlayerReferenceName(playerReference)
+            player?.setPlayerLanguage(localization)
+            player?.controlAutoplay(controlAutoplay)
+            player?.scroll(onAd: scrollOnAd)
+            player?.creditsLabelColor(creditsLabelColor)
+            player?.setCornerRadius(Int32(setCornerRadius))
+            player?.setSeekSeconds(Int32(doubleTapSeek))
+            player?.setSeekPreviewEnabled(Int32(seekPreview))
+            if let creditsLabelColor {
+                player?.creditsLabelColor(creditsLabelColor)
+            }
+            
             self.listOfPlayers[playerReference] = player
         }
-        result(nil)
     }
     
-    private func handleLoadPlaylist(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let playerView = UIView()
-        guard let args = call.arguments as? [String: Any],
-              let viewId = args["viewId"] as? Int64,
-              let playerId = args["playerId"] as? Int,
-              let playlistId = args["playlistId"] as? Int,
-              let playerReference = args["playerReference"] as? String,
-              let view = videoViewFactory.getView(byId: viewId) else {
-            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments or view not found", details: nil))
-            return
-        }
+    private func loadPlaylist(_ view: UIView,
+                              _ playerView: UIView,
+                              _ playerId: Int,
+                              _ playlistId: Int,
+                              _ playerReference: String,
+                              _ controlAutoplay: Bool,
+                              _ scrollOnAd: Bool,
+                              _ creditsLabelColor: String?,
+                              _ setCornerRadius: Int,
+                              _ localization: String?,
+                              _ doubleTapSeek: Int,
+                              _ seekPreview: Int) {
         
         DispatchQueue.main.async {
             playerView.translatesAutoresizingMaskIntoConstraints = false
-            playerView.backgroundColor = .red
             view.addSubview(playerView)
             
             NSLayoutConstraint.activate([
@@ -260,11 +263,20 @@ extension TargetvideoFlutterPlugin {
             ])
             
             let data = BVData(playerID: Int32(playerId), forPlaylistID: Int32(playlistId))
-            var player = BVPlayer(data: data, for: playerView)
+            let player = BVPlayer(data: data, for: playerView)
             player?.setPlayerReferenceName(playerReference)
+            player?.setPlayerLanguage(localization)
+            player?.controlAutoplay(controlAutoplay)
+            player?.scroll(onAd: scrollOnAd)
+            player?.setCornerRadius(Int32(setCornerRadius))
+            player?.setSeekSeconds(Int32(doubleTapSeek))
+            player?.setSeekPreviewEnabled(Int32(seekPreview))
+            if let creditsLabelColor {
+                player?.creditsLabelColor(creditsLabelColor)
+            }
+            
             self.listOfPlayers[playerReference] = player
         }
-        result(nil)
     }
 }
 
@@ -276,43 +288,42 @@ extension TargetvideoFlutterPlugin: FlutterStreamHandler {
         setupEventNetworkingForAd()
         return nil
     }
-
+    
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
         self.eventSink = nil
         return nil
     }
-
+    
     private func setupEventNetworking() {
         NotificationCenter.default.addObserver(self, selector: #selector(eventWriter), name: NSNotification.Name(rawValue: "PlayerEvent"), object: nil)
     }
-
+    
     private func setupEventNetworkingForAd() {
         NotificationCenter.default.addObserver(self, selector: #selector(eventWriter), name: NSNotification.Name(rawValue: "AdEvent"), object: nil)
     }
-
+    
     @objc private func eventWriter(_ notification: NSNotification) {
         var eventDict: [String: Any] = [:]
-        var playerReference: String = "noRef"
-
+        
         if let reference = notification.userInfo?["reference"] as? String {
-            playerReference = reference
+            eventDict["playerReference"] = reference
         }
-
+        
         if notification.name.rawValue == "PlayerEvent" {
-
+            
             if let event = notification.userInfo?["event"] as? String {
                 eventDict["type"] = "PlayerEvent"
                 eventDict["event"] = event
             }
         }
-
+        
         if notification.name.rawValue == "AdEvent" {
             if let ad = notification.userInfo?["ad"] as? String {
                 eventDict["type"] = "AdEvent"
                 eventDict["ad"] = ad
             }
         }
-
+        
         if let eventSink = self.eventSink {
             eventSink(eventDict)
         }
