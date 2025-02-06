@@ -2,27 +2,28 @@ import 'targetvideo_flutter_plugin_platform_interface.dart';
 
 class TargetVideoPlayer {
   final String playerReference;
+  final bool? controlAutoplay;
+  final bool? scrollOnAd;
+  final String? creditsLabelColor;
+  final int? setCornerRadius;
+  final String? localization;
+  final int? doubleTapSeek;
+  final int? seekPreview;
 
-  // Constructor
+  // Constructor with nullable optional parameters
   TargetVideoPlayer({
-    required this.playerReference
+    required this.playerReference,
+    this.controlAutoplay,
+    this.scrollOnAd,
+    this.creditsLabelColor,
+    this.setCornerRadius,
+    this.localization,
+    this.doubleTapSeek,
+    this.seekPreview,
   });
 
   // Player methods
-  Future<void> load({
-    required int playerId,
-    required int mediaId,
-    required String typeOfPlayer,
-    required int viewId,
-    bool? controlAutoplay,
-    bool? scrollOnAd,
-    String? creditsLabelColor,
-    int? setCornerRadius,
-    String? localization,
-    int? doubleTapSeek,
-    int? seekPreview,
-  }) async {
-
+  Future<void> load({required int playerId, required int mediaId, required String typeOfPlayer, required int viewId}) async {
     await TargetvideoFlutterPluginPlatform.instance.load(
         playerId,
         mediaId,

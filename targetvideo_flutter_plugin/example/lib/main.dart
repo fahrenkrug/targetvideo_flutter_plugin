@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:targetvideo_flutter_plugin/targetvideo_player.dart';
+import 'package:targetvideo_flutter_plugin/targetvideo_player_platform_view.dart';
 
 void main() => runApp(const MyApp());
 
@@ -29,44 +29,81 @@ class NativeVideoWidget extends StatefulWidget {
 class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   int? _viewId1;
   int? _viewId2;
-  final TargetVideoPlayer _player1 = TargetVideoPlayer(playerReference: "player1");
+  final TargetVideoPlayer _player1 = TargetVideoPlayer(playerReference: "player1", localization: "it");
   final TargetVideoPlayer _player2 = TargetVideoPlayer(playerReference: "player2");
+  final List<String> _eventLogs = [];
+  final ScrollController _scrollController = ScrollController();
 
   static const _playerSize = Size(320, 180);
 
   @override
   void initState() {
     super.initState();
-    _player1.handleAllPlayerEvents((event) => print(event));
-    _player2.handleAllPlayerEvents((event) => print(event));
+    _player1.handleAllPlayerEvents((event) {
+
+      String? playerEvent = event['event'];
+      if (playerEvent != null) {
+        if (event['event'] == 'playerVideoLoad') {
+          /// Handle playerVideoLoad event
+          print("Video Loaded");
+        }
+        setState(() {
+          _eventLogs.add(
+              "${event['playerReference']}: $playerEvent");
+
+          Future.delayed(Duration(milliseconds: 100), () {
+            _scrollController.jumpTo(
+                _scrollController.position.maxScrollExtent);
+          });
+        });
+      }
+    });
+
+    _player2.handleAllPlayerEvents((event) {
+      String? adEvent = event['ad'];
+      if (adEvent != null) {
+        setState(() {
+          _eventLogs.add(
+              "${event['playerReference']}: $adEvent"); // Ad events
+
+          Future.delayed(Duration(milliseconds: 100), () {
+            _scrollController.jumpTo(
+                _scrollController.position.maxScrollExtent);
+          });
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 16,
         children: [
-          _buildVideoPlayer1(),
-          const SizedBox(height: 16),
-          _buildVideoPlayer2(),
-          const SizedBox(height: 16),
           _buildControlButtons(),
+          // Video Player 1
+          TargetVideoPlayerView(
+            onCreated: (id) => setState(() => _viewId1 = id), size: _playerSize,
+          ),
+          const SizedBox(height: 16),
+          // Video Player 2
+          TargetVideoPlayerView(
+            onCreated: (id) => setState(() => _viewId2 = id), size: _playerSize,
+          ),
+          const SizedBox(height: 16),
+          // Display latest event
+          Column(
+            children: [
+              Text('Events:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              EventLogListView(eventLogs: _eventLogs, scrollController: _scrollController),
+            ],
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildVideoPlayer1() {
-    return PlatformVideoView(
-      onCreated: (id) => setState(() => _viewId1 = id),
-    );
-  }
-
-  Widget _buildVideoPlayer2() {
-    return PlatformVideoView(
-      onCreated: (id) => setState(() => _viewId2 = id),
     );
   }
 
@@ -78,11 +115,35 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
       children: [
         PlayerControlButton(
           label: 'Load Video 1',
-          onPressed: () => _loadVideo(_player1, _viewId1, localization: "it", doubleTapSeek: 11),
+          onPressed: () async {
+          if (_viewId1 == null) return;
+          try {
+            await _player1.load(
+              playerId: 45852,
+              mediaId: 24090,
+              typeOfPlayer: "Playlist",
+              viewId: _viewId1!
+            );
+          } on PlatformException catch (e) {
+            print('Error loading video 1: ${e.message}');
+          }
+        }
         ),
         PlayerControlButton(
           label: 'Load Video 2',
-          onPressed: () => _loadVideo(_player2, _viewId2),
+          onPressed: () async {
+          if (_viewId2 == null) return;
+          try {
+            await _player2.load(
+              playerId: 45852,
+              mediaId: 24090,
+              typeOfPlayer: "Playlist",
+              viewId: _viewId2!,
+            );
+          } on PlatformException catch (e) {
+            print('Error loading video 2: ${e.message}');
+          }
+        }
         ),
         PlayerControlButton(
           label: 'Play/Pause 1',
@@ -96,23 +157,6 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
     );
   }
 
-  Future<void> _loadVideo(TargetVideoPlayer player, int? viewId, {String? localization, int? doubleTapSeek}) async {
-    if (viewId == null) return;
-
-    try {
-      await player.load(
-        playerId: 45852,
-        mediaId: 24090,
-        typeOfPlayer: "Playlist",
-        viewId: viewId,
-        localization: localization,
-        doubleTapSeek: doubleTapSeek,
-      );
-    } on PlatformException catch (e) {
-      print('Error loading video: ${e.message}');
-    }
-  }
-
   Future<void> _togglePlayPause(TargetVideoPlayer player) async {
     try {
       final isPaused = await player.isPaused();
@@ -123,34 +167,46 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   }
 }
 
-class PlatformVideoView extends StatelessWidget {
-  final ValueChanged<int>? onCreated;
+class EventLogListView extends StatelessWidget {
+  final List<String> eventLogs;
+  final ScrollController scrollController;
 
-  const PlatformVideoView({
-    super.key,
-    this.onCreated,
-  });
+  const EventLogListView({
+    Key? key,
+    required this.eventLogs,
+    required this.scrollController,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: _NativeVideoWidgetState._playerSize.width,
-      height: _NativeVideoWidgetState._playerSize.height,
-      margin: const EdgeInsets.only(bottom: 16.0),
-      child: Platform.isIOS
-          ? UiKitView(
-        viewType: 'targetvideo/player_video_view',
-        creationParamsCodec: const StandardMessageCodec(),
-        onPlatformViewCreated: onCreated,
-      )
-          : AndroidView(
-        viewType: 'targetvideo/player_video_view',
-        creationParamsCodec: const StandardMessageCodec(),
-        onPlatformViewCreated: onCreated,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16), // Horizontal padding
+      child: Container(
+        height: 200, // Adjust height as needed
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1), // Thin black border
+          borderRadius: BorderRadius.circular(8), // Optional rounded corners
+        ),
+        child: Scrollbar(
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: eventLogs.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                child: Text(
+                  eventLogs[index],
+                  style: const TextStyle(fontSize: 14),
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
 }
+
 
 class PlayerControlButton extends StatelessWidget {
   final String label;
