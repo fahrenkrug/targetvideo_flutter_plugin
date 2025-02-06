@@ -38,31 +38,21 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   @override
   void initState() {
     super.initState();
+    // Listening to player events
+    listenForPlayerEvents();
+  }
+
+  void listenForPlayerEvents() {
     _player1.handleAllPlayerEvents((event) {
-      String? playerEvent = event['event'];
+      String? playerEvent = event['event']; // Event dictionary key for player events
+      String? adEvent = event['ad']; // Event dictionary key for ad events
       if (playerEvent != null) {
         if (event['event'] == 'playerVideoLoad') {
           /// Handle playerVideoLoad event
-          print("Video Loaded");
         }
         setState(() {
           _eventLogs.add(
               "${event['playerReference']}: $playerEvent");
-
-          Future.delayed(Duration(milliseconds: 100), () {
-            _scrollController.jumpTo(
-                _scrollController.position.maxScrollExtent);
-          });
-        });
-      }
-    });
-
-    _player2.handleAllPlayerEvents((event) {
-      String? adEvent = event['ad'];
-      if (adEvent != null) {
-        setState(() {
-          _eventLogs.add(
-              "${event['playerReference']}: $adEvent"); // Ad events
 
           Future.delayed(Duration(milliseconds: 100), () {
             _scrollController.jumpTo(
@@ -208,6 +198,7 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
     );
   }
 
+  // Play/pause the loaded player
   Future<void> _togglePlayPause(TargetVideoPlayer player) async {
     try {
       final isPaused = await player.isPaused();
@@ -218,6 +209,7 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   }
 }
 
+// Event log widget
 class EventLogListView extends StatelessWidget {
   final List<String> eventLogs;
   final ScrollController scrollController;
@@ -258,7 +250,7 @@ class EventLogListView extends StatelessWidget {
   }
 }
 
-
+// Action button
 class PlayerControlButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
