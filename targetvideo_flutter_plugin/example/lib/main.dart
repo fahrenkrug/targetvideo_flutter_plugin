@@ -27,10 +27,8 @@ class NativeVideoWidget extends StatefulWidget {
 }
 
 class _NativeVideoWidgetState extends State<NativeVideoWidget> {
-  int? _viewId1;
-  int? _viewId2;
-  final TargetVideoPlayer _player1 = TargetVideoPlayer(playerReference: "player1", localization: "it");
-  final TargetVideoPlayer _player2 = TargetVideoPlayer(playerReference: "player2");
+  int? _viewId;
+  final TargetVideoPlayer _player = TargetVideoPlayer(playerReference: "player1", localization: "it");
   final List<String> _eventLogs = [];
   final ScrollController _scrollController = ScrollController();
   static const _playerSize = Size(320, 180);
@@ -43,7 +41,7 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   }
 
   void listenForPlayerEvents() {
-    _player1.handleAllPlayerEvents((event) {
+    _player.handleAllPlayerEvents((event) {
       String? playerEvent = event['event']; // Event dictionary key for player events
       String? adEvent = event['ad']; // Event dictionary key for ad events
       if (playerEvent != null) {
@@ -75,12 +73,7 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
           _buildControlButtons(),
           // Video Player 1
           TargetVideoPlayerView(
-            onCreated: (id) => setState(() => _viewId1 = id), size: _playerSize,
-          ),
-          const SizedBox(height: 16),
-          // Video Player 2
-          TargetVideoPlayerView(
-            onCreated: (id) => setState(() => _viewId2 = id), size: _playerSize,
+            onCreated: (id) => setState(() => _viewId = id), size: _playerSize,
           ),
           const SizedBox(height: 16),
           // Display latest event
@@ -102,97 +95,77 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
       alignment: WrapAlignment.center,
       children: [
         PlayerControlButton(
-          label: 'Load Video 1',
+          label: 'Load player',
           onPressed: () async {
-          if (_viewId1 == null) return;
+          if (_viewId == null) return;
           try {
-            await _player1.load(
+            await _player.load(
               playerId: 45852,
               mediaId: 24090,
               typeOfPlayer: "Playlist",
-              viewId: _viewId1!
+              viewId: _viewId!
             );
           } on PlatformException catch (e) {
-            print('Error loading video 1: ${e.message}');
+            print('Error loading video: ${e.message}');
           }
         }
         ),
         PlayerControlButton(
-          label: 'Load Video 2',
-          onPressed: () async {
-          if (_viewId2 == null) return;
-          try {
-            await _player2.load(
-              playerId: 45852,
-              mediaId: 24090,
-              typeOfPlayer: "Playlist",
-              viewId: _viewId2!,
-            );
-          } on PlatformException catch (e) {
-            print('Error loading video 2: ${e.message}');
-          }
-        }
-        ),
-        PlayerControlButton(
-          label: 'Play/Pause 1',
-          onPressed: () async => _togglePlayPause(_player1),
-        ),
-        PlayerControlButton(
-          label: 'Play/Pause 2',
-          onPressed: () async => _togglePlayPause(_player2),
+          label: 'Play/Pause',
+          onPressed: () async => _togglePlayPause(_player),
         ),
         PlayerControlButton(
           label: 'Previous',
-          onPressed: () async => _player1.previous(),
+          onPressed: () async => _player.previous(),
         ),
         PlayerControlButton(
           label: 'Next',
-          onPressed: () async => _player1.next(),
+          onPressed: () async => _player.next(),
         ),
         PlayerControlButton(
           label: 'Mute',
-          onPressed: () async => _player1.mute(),
+          onPressed: () async => _player.mute(),
         ),
         PlayerControlButton(
           label: 'Unmute',
-          onPressed: () async => _player1.unMute(),
+          onPressed: () async => _player.unMute(),
         ),
         PlayerControlButton(
           label: 'setFullScreen',
-          onPressed: () async => _player1.setFullscreen(true),
+          onPressed: () async => _player.setFullscreen(true),
         ),
         PlayerControlButton(
           label: 'showControls',
-          onPressed: () async => _player1.showControls(),
+          onPressed: () async => _player.showControls(),
         ),
         PlayerControlButton(
           label: 'hideControls',
-          onPressed: () async => _player1.hideControls(),
+          onPressed: () async => _player.hideControls(),
         ),
         PlayerControlButton(
           label: 'Get current time',
           onPressed: (() async {
-            num? time = await _player1.getPlayerCurrentTime();
+            num? time = await _player.getPlayerCurrentTime();
             print("Current time: $time");
           }),
         ),
         PlayerControlButton(
           label: 'Get ad duration',
           onPressed: (() async {
-            num? time = await _player1.getAdDuration();
+            num? time = await _player.getAdDuration();
             print("Ad duration: $time");
           }),
         ),
         PlayerControlButton(
           label: 'Get video duration',
           onPressed: (() async {
-            num? time = await _player1.getVideoDuration();
+            num? time = await _player.getVideoDuration();
             print("Video duration: $time");
           }),
         ),
         PlayerControlButton(
           label: 'Destroy',
-          onPressed: () => _player1.destroyPlayer(),
+          onPressed: () => _player.destroyPlayer(),
         ),
       ],
     );
