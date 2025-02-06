@@ -111,7 +111,9 @@ class MethodChannelTargetvideoFlutterPlugin
   @override
   Future<void> setFullscreen(bool fullscreen, String playerReference) async {
     try {
-      await methodChannel.invokeMethod('setFullscreen', {'fullscreen': fullscreen});
+      await methodChannel.invokeMethod('setFullscreen', {
+        'fullscreen': fullscreen,
+        'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to set fullscreen: ${e.message}');
       rethrow;
@@ -214,16 +216,6 @@ class MethodChannelTargetvideoFlutterPlugin
       return await methodChannel.invokeMethod<bool>('isAutoplay', {'playerReference': playerReference});
     } on PlatformException catch (e) {
       debugPrint('Failed to check autoplay: ${e.message}');
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> setLocalization(String language) async {
-    try {
-      return await methodChannel.invokeMethod<void>('setLocalization', {'language': language});
-    } on PlatformException catch (e) {
-      debugPrint('Failed to set localization: ${e.message}');
       rethrow;
     }
   }

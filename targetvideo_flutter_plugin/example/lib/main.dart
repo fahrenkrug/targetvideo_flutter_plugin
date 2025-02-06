@@ -33,14 +33,12 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   final TargetVideoPlayer _player2 = TargetVideoPlayer(playerReference: "player2");
   final List<String> _eventLogs = [];
   final ScrollController _scrollController = ScrollController();
-
   static const _playerSize = Size(320, 180);
 
   @override
   void initState() {
     super.initState();
     _player1.handleAllPlayerEvents((event) {
-
       String? playerEvent = event['event'];
       if (playerEvent != null) {
         if (event['event'] == 'playerVideoLoad') {
@@ -147,11 +145,64 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
         ),
         PlayerControlButton(
           label: 'Play/Pause 1',
-          onPressed: () => _togglePlayPause(_player1),
+          onPressed: () async => _togglePlayPause(_player1),
         ),
         PlayerControlButton(
           label: 'Play/Pause 2',
-          onPressed: () => _togglePlayPause(_player2),
+          onPressed: () async => _togglePlayPause(_player2),
+        ),
+        PlayerControlButton(
+          label: 'Previous',
+          onPressed: () async => _player1.previous(),
+        ),
+        PlayerControlButton(
+          label: 'Next',
+          onPressed: () async => _player1.next(),
+        ),
+        PlayerControlButton(
+          label: 'Mute',
+          onPressed: () async => _player1.mute(),
+        ),
+        PlayerControlButton(
+          label: 'Unmute',
+          onPressed: () async => _player1.unMute(),
+        ),
+        PlayerControlButton(
+          label: 'setFullScreen',
+          onPressed: () async => _player1.setFullscreen(true),
+        ),
+        PlayerControlButton(
+          label: 'showControls',
+          onPressed: () async => _player1.showControls(),
+        ),
+        PlayerControlButton(
+          label: 'hideControls',
+          onPressed: () async => _player1.hideControls(),
+        ),
+        PlayerControlButton(
+          label: 'Get current time',
+          onPressed: (() async {
+            num? time = await _player1.getPlayerCurrentTime();
+            print("Current time: $time");
+          }),
+        ),
+        PlayerControlButton(
+          label: 'Get ad duration',
+          onPressed: (() async {
+            num? time = await _player1.getAdDuration();
+            print("Ad duration: $time");
+          }),
+        ),
+        PlayerControlButton(
+          label: 'Get video duration',
+          onPressed: (() async {
+            num? time = await _player1.getVideoDuration();
+            print("Video duration: $time");
+          }),
+        ),
+        PlayerControlButton(
+          label: 'Destroy',
+          onPressed: () => _player1.destroyPlayer(),
         ),
       ],
     );

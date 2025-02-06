@@ -132,13 +132,6 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(nil)
             }
-        case "setLocalization":
-            if let args = call.arguments as? [String: Any],
-               let localization = args["localization"] as? String,
-               let player = getPlayerWithReference(call: call) {
-                player.setPlayerLanguage(localization)
-            }
-            result(nil)
         default:
             result(FlutterMethodNotImplemented)
         }
