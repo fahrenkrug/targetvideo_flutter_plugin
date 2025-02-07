@@ -219,7 +219,6 @@ extension TargetvideoFlutterPlugin {
             player?.setPlayerLanguage(localization)
             player?.controlAutoplay(controlAutoplay)
             player?.scroll(onAd: scrollOnAd)
-            player?.creditsLabelColor(creditsLabelColor)
             player?.setCornerRadius(Int32(setCornerRadius))
             player?.setSeekSeconds(Int32(doubleTapSeek))
             player?.setSeekPreviewEnabled(Int32(seekPreview))
