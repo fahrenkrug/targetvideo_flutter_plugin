@@ -127,12 +127,6 @@ class MockTargetvideoFlutterPluginPlatform
   }
 
   @override
-  Future<bool> setLocalization(String localization) async {
-    // TODO: implement isAutoplay
-    throw UnimplementedError();
-  }
-
-  @override
   Stream<Map<String, dynamic>> get playerEvents {
     throw UnimplementedError();
   }
