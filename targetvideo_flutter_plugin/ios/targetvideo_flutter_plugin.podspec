@@ -13,13 +13,24 @@ A new Flutter plugin project.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'TargetVideo' => 'ognjen.pavlovic@target-video.com' }
   s.source           = { :path => '.' }
+  s.static_framework = true
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'BridSDK' , '1.3.1'
-  s.platform = :ios, '15.6'
+  s.dependency 'BridSDKDynamicPrebidMobile'
+  s.dependency 'BridSDKDynamicProtobuf'
+  s.dependency 'BridSDK'
+  s.dependency 'google-cast-sdk'
 
+
+
+s.vendored_frameworks = 'path/to/BridSDK.framework', 'path/to/Protobuf.framework'
+
+
+  s.platform = :ios, '15.6'
   # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+  s.pod_target_xcconfig = {
+     'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386'
+     }
   s.swift_version = '5.0'
 
   # If your plugin requires a privacy manifest, for example if it uses any
