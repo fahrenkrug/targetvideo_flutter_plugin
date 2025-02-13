@@ -5,3 +5,7 @@
 ## 0.0.2
 
 * Updated plugin min requirement.
+
+## 0.0.3
+
+* Bug fix

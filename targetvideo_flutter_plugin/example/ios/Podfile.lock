@@ -1,35 +1,35 @@
 PODS:
   - BridSDK (1.4.5):
     - GoogleAds-IMA-iOS-SDK (= 3.23.0)
-  - BridSDKDynamicPrebidMobile (1.0.0)
-  - BridSDKDynamicProtobuf (1.0.0)
   - Flutter (1.0.0)
   - google-cast-sdk (4.8.3):
     - Protobuf (~> 3.13)
   - GoogleAds-IMA-iOS-SDK (3.23.0)
   - integration_test (0.0.1):
     - Flutter
+  - PrebidMobile (2.4.0):
+    - PrebidMobile/core (= 2.4.0)
+  - PrebidMobile/core (2.4.0)
   - Protobuf (3.29.3)
-  - targetvideo_flutter_plugin (0.0.2):
+  - targetvideo_flutter_plugin (0.0.3):
     - BridSDK
-    - BridSDKDynamicPrebidMobile
-    - BridSDKDynamicProtobuf
     - Flutter
     - google-cast-sdk
+    - PrebidMobile
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - PrebidMobile
   - Protobuf
   - targetvideo_flutter_plugin (from `.symlinks/plugins/targetvideo_flutter_plugin/ios`)
 
 SPEC REPOS:
   trunk:
     - BridSDK
-    - BridSDKDynamicPrebidMobile
-    - BridSDKDynamicProtobuf
     - google-cast-sdk
     - GoogleAds-IMA-iOS-SDK
+    - PrebidMobile
     - Protobuf
 
 EXTERNAL SOURCES:
@@ -42,15 +42,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   BridSDK: 5dd4cf0028c1b30207d8b95deab60d08c9180d02
-  BridSDKDynamicPrebidMobile: 46bff8dd36ea6de30c39cdbf71d7eb97fef9828c
-  BridSDKDynamicProtobuf: aaa75ff2fb2859c07e55566e1618d2bf4987ad52
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   google-cast-sdk: 1fb6724e94cc5ff23b359176e0cf6360586bb97a
   GoogleAds-IMA-iOS-SDK: ee2a68ed7a1a17c7bb81bdb1b81590b35a3fc8f3
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
+  PrebidMobile: cad263381f04c99e7be8311155cf32a707afe442
   Protobuf: e2de96d939c642ce8da186343ff8929b35223212
-  targetvideo_flutter_plugin: 81b1eb444424056cf2f2a81f48b7af409b7ccc3d
+  targetvideo_flutter_plugin: d7377552f289f131bb45f5179cff4fc5695f5d9f
 
-PODFILE CHECKSUM: 777d6d52dccfc8de1169757f76bf1077bc40b4bc
+PODFILE CHECKSUM: 823b4ec2b0bd0a25de742adc3579ad0ba1a7c8a8
 
 COCOAPODS: 1.16.2
