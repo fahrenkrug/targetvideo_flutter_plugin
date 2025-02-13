@@ -4,22 +4,30 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'targetvideo_flutter_plugin'
-  s.version          = '0.0.1'
+  s.version          = '0.0.3'
   s.summary          = 'A new Flutter plugin project.'
   s.description      = <<-DESC
 A new Flutter plugin project.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://target-video.com/'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'TargetVideo' => 'ognjen.pavlovic@target-video.com' }
   s.source           = { :path => '.' }
+  s.static_framework = true
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'BridSDK' , '1.3.1'
-  s.platform = :ios, '12.0'
+  s.dependency 'BridSDK'
+  s.dependency 'google-cast-sdk'
+  s.dependency 'PrebidMobile'
 
+s.vendored_frameworks = 'path/to/BridSDK.framework', 'path/to/Protobuf.framework'
+
+
+  s.platform = :ios, '15.6'
   # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+  s.pod_target_xcconfig = {
+     'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386'
+     }
   s.swift_version = '5.0'
 
   # If your plugin requires a privacy manifest, for example if it uses any

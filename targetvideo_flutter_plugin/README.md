@@ -1,16 +1,17 @@
-# targetvideo_flutter_plugin
+# TargetVideo flutter plugin
 
-Create and use your custom ad tech with a top-of-the-line video platform. Build and grow your business with a vast array of video technology solutions.
+A new Flutter plugin for video reproduction using native BridSDK for iOS and Android.
 
 ### What is this repository for? ###
 
 * This SDK aims at easily playing videos with or without ads in your Flutter application. Apps built with this SDK integrate with video hosting, streaming, and analytics services.
-* ver 0.0.1
 
 ### How do I get set up? ###
 
-* import 'package:targetvideo_flutter_plugin/targetvideo_player.dart';
- and 'package:targetvideo_flutter_plugin/targetvideo_player_platform_view.dart';
+* Add 'targetvideo_flutter_plugin: ^x.x.x' to your pubspec.yaml file and run flutter pub get.
+* import 'package:targetvideo_flutter_plugin/targetvideo_player.dart'; in your class and start using our plugin.
+* We provide custom platform view you can use for easy testing, import 'package:targetvideo_flutter_plugin/targetvideo_player_platform_view.dart'; to use it.
+* It is necessary to add NSUserTrackingUsageDescription to your app info.plist file.
 * Create a player with its player reference: 'final TargetVideoPlayer _player = TargetVideoPlayer(playerReference: "playerName")'
 * Call 'load' player method to start a video reproduction in your view.
 
