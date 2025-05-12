@@ -1,4 +1,4 @@
-package com.example.targetvideo_flutter_plugin
+package com.targetvideo.flutter_plugin
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
