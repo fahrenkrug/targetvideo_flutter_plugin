@@ -12,7 +12,9 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
         gradlePluginPortal()
+
     }
 }
 
@@ -22,4 +24,7 @@ plugins {
     id "org.jetbrains.kotlin.android" version "1.8.22" apply false
 }
 
-include ":app"
+include ':targetvideo_flutter_plugin', ':app'
+
+project(':targetvideo_flutter_plugin').projectDir = \
+        new File(settingsDir, '../../android')
