@@ -7,9 +7,11 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import tv.brid.sdk.BridPlayer
-import tv.brid.sdk.BridPlayerBuilder
-import tv.brid.sdk.listeners.BridPlayerListener
+
+
+import tv.brid.sdk.api.BridPlayer
+import tv.brid.sdk.api.BridPlayerBuilder
+import tv.brid.sdk.player.listeners.BridPlayerListener
 
 /** Main plugin class – bridges Flutter <-> Android. */
 class TargetvideoFlutterPlugin : FlutterPlugin,
@@ -54,7 +56,7 @@ class TargetvideoFlutterPlugin : FlutterPlugin,
     "hideControls"      -> invokeOnPlayer(call, result) { it.hideControls() }
     "isAdPlaying"       -> queryPlayer(call, result) { it.isPlayingAd }
     "getPlayerCurrentTime" -> queryPlayer(call, result) { it.currentPosition }
-    "getAdDuration"     -> queryPlayer(call, result) { it.getAdDuration() }
+//    "getAdDuration"     -> queryPlayer(call, result) { it.getAdDuration() } - not available on Android
     "getVideoDuration"  -> queryPlayer(call, result) { it.duration }
     "isPaused"          -> queryPlayer(call, result) { it.isPaused }
     "isRepeated"        -> queryPlayer(call, result) { it.isRepeated }
@@ -71,50 +73,78 @@ class TargetvideoFlutterPlugin : FlutterPlugin,
   override fun onCancel(arguments: Any?) { eventSink = null }
 
   // ---------- Private helpers ----------
-
   private fun load(call: MethodCall, result: MethodChannel.Result) {
-    val args = call.arguments as? Map<*, *> ?: return result.error(
-      "ARG_ERROR", "Arguments must be a map", null
-    )
+    val args = call.arguments as? Map<*, *>
+      ?: return result.error("ARG_ERROR", "Arguments must be a map", null)
 
-    val context = (viewFactory
-      .getViewHolder(args["viewId"] as Int)
+    // -------------------------------------------------------------------
+    // Мandatory – view holder, context, reference IDs
+    // -------------------------------------------------------------------
+    val viewId = (args["viewId"] as? Number)?.toInt()
+      ?: return result.error("ARG_ERROR", "viewId missing or not an int", null)
+
+    val container = viewFactory.getViewHolder(viewId)
       ?: return result.error("VIEW_ERROR", "Native view not found", null)
-            ).context
+
+    val context = container.context
 
     val playerRef = args["playerReference"] as? String
       ?: return result.error("ARG_ERROR", "playerReference missing", null)
 
-    val playerId           = (args["playerId"] as Number).toInt()
-    val mediaIdOrPlaylist  = (args["mediaId"]  as Number).toInt()
-    val typeOfPlayer       = args["typeOfPlayer"] as? String ?: "Single"
-    val container          = viewFactory.getViewHolder(args["viewId"] as Int)!!
+    val playerId = (args["playerId"] as? Number)?.toInt()
+      ?: return result.error("ARG_ERROR", "playerId missing or not an int", null)
 
-    // Build player
-    val bridPlayer = BridPlayerBuilder(context as Context, container)
+    // -------------------------------------------------------------------
+    // Single  vs  Playlist – један кључ mediaId
+    // -------------------------------------------------------------------
+    val typeOfPlayer = (args["typeOfPlayer"] as? String)?.ifBlank { "Single" } ?: "Single"
+
+    val mediaId = (args["mediaId"] as? Number)?.toInt()
+      ?: return result.error("ARG_ERROR", "mediaId missing or not an int", null)
+
+    // -------------------------------------------------------------------
+    // Optional parameters  (safe–cast + подразумеване вредности)
+    // -------------------------------------------------------------------
+    val localization    = args["localization"]     as? String  ?: "en"
+    val controlAutoplay = args["controlAutoplay"]  as? Boolean ?: false
+    val scrollOnAd      = args["scrollOnAd"]       as? Boolean ?: false
+    val creditsColor    = args["creditsLabelColor"] as? String
+    val cornerRadius    = (args["setCornerRadius"] as? Number)?.toInt() ?: 0
+    val doubleTapSeek   = (args["doubleTapSeek"]   as? Number)?.toInt() ?: 0
+    val seekPreview     = (args["seekPreview"]     as? Number)?.toInt() ?: 1
+
+    // -------------------------------------------------------------------
+    // Build Brid Player
+    // -------------------------------------------------------------------
+    val bridPlayer = BridPlayerBuilder(context, container)
       .fullscreen(false)
-      .setPlayerLanguage(args["localization"] as? String ?: "")
-      .setCornerRadius((args["setCornerRadius"] as Number).toInt())
-      .setSeekSeconds((args["doubleTapSeek"] as Number).toInt())
+      .setPlayerLanguage(localization)
+      .setCornerRadius(cornerRadius)
+      .setSeekSeconds(doubleTapSeek)
       .useVpaidSupport(false)
       .build().apply {
         setPlayerReference(playerRef)
-        enableAutoplay(args["controlAutoplay"] as Boolean)
-        setCreditsLabelColor(args["creditsLabelColor"] as? String)
-        enableAdControls(!(args["scrollOnAd"] as Boolean))
-        setSeekPreview((args["seekPreview"] as Number).toInt())
+        enableAutoplay(controlAutoplay)
+        setCreditsLabelColor(creditsColor)
+        enableAdControls(!scrollOnAd)
+        setSeekPreview(seekPreview)
         setBridListener(createListener())
       }
 
-    // Load content
-    if (typeOfPlayer == "Playlist")
-      bridPlayer.loadPlaylist(playerId, mediaIdOrPlaylist)
+    // -------------------------------------------------------------------
+    // Load content — исти mediaId, различит Brid API
+    // -------------------------------------------------------------------
+    if (typeOfPlayer.equals("Playlist", ignoreCase = true))
+      bridPlayer.loadPlaylist(playerId, mediaId)  // mediaId = playlistId
     else
-      bridPlayer.loadVideo(playerId, mediaIdOrPlaylist)
+      bridPlayer.loadVideo(playerId, mediaId)     // mediaId = videoId
 
+    // Cache reference & return
     players[playerRef] = bridPlayer
     result.success(null)
   }
+
+
 
   private fun setFullscreen(call: MethodCall, result: MethodChannel.Result) =
     invokeOnPlayer(call, result) { player ->
