@@ -36,7 +36,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.targetvideo_flutter_plugin
+        package: com.targetvideo.flutter_plugin
         pluginClass: TargetvideoFlutterPlugin
       ios:
         pluginClass: TargetvideoFlutterPlugin
