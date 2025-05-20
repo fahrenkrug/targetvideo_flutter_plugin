@@ -1,8 +1,8 @@
 name: targetvideo_flutter_plugin
 description: "A new Flutter plugin for video reproduction using native BridSDK for iOS and Android."
-version: 0.0.1
-homepage: https://bitbucket.org/dulenba93/targetvideo-flutter-plugin/src/main/
-repository: https://bitbucket.org/dulenba93/targetvideo-flutter-plugin/src/main/
+version: 1.0.0
+homepage: https://developer.target-video.com/docs/introduction
+repository: https://bitbucket.org/dulenba93/targetvideoflutter/src/main/
 
 environment:
   sdk: ^3.6.0
