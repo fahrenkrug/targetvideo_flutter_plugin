@@ -9,3 +9,7 @@
 ## 0.0.3
 
 * Bug fix
+
+## 1.0.0
+
+* Android support added
