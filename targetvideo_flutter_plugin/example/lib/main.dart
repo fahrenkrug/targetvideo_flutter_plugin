@@ -100,8 +100,8 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
           if (_viewId == null) return;
           try {
             await _player.load(
-              playerId: 47456,
-              mediaId: 2092588,
+              playerId: 47297,
+              mediaId: 2173624,
               typeOfPlayer: "Single",
               viewId: _viewId!
             );
