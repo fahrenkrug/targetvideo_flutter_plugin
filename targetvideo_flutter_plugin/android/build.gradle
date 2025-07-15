@@ -65,6 +65,6 @@ android {
 }
 
 dependencies {
-    implementation 'tv.brid:sdk:1.4.7'//for flutter plugin without media session
+    implementation 'tv.brid:sdk:1.4.7'
 
 }
