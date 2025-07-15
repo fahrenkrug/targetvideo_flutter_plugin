@@ -13,3 +13,6 @@
 ## 1.0.0
 
 * Android support added
+
+## 1.0.1
+* Added support for iOS 15.0
