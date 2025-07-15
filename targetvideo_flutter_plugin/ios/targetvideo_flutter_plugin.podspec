@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'targetvideo_flutter_plugin'
-  s.version          = '1.0.0'
+  s.version          = '1.0.2'
   s.summary          = 'A new Flutter plugin project.'
   s.description      = <<-DESC
 A new Flutter plugin project.
@@ -16,12 +16,12 @@ A new Flutter plugin project.
   s.static_framework = true
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'BridSDK', '1.4.5'
+  s.dependency 'BridSDK'
   s.dependency 'google-cast-sdk'
   s.dependency 'PrebidMobile'
-  s.dependency 'BridSDKDynamicProtobuf'
+#   s.dependency 'BridSDKDynamicProtobuf'
 
-# s.vendored_frameworks = 'path/to/Protobuf.framework'
+s.vendored_frameworks = 'path/to/BridSDKDynamicProtobuf.framework'
 
 
   s.platform = :ios, '15.0'
