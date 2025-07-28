@@ -28,7 +28,7 @@ class NativeVideoWidget extends StatefulWidget {
 
 class _NativeVideoWidgetState extends State<NativeVideoWidget> {
   int? _viewId;
-  final TargetVideoPlayer _player = TargetVideoPlayer(playerReference: "player1", localization: "it");
+  final TargetVideoPlayer _player = TargetVideoPlayer(playerReference: "player1", localization: "de");
   final List<String> _eventLogs = [];
   final ScrollController _scrollController = ScrollController();
   static const _playerSize = Size(320, 180);
@@ -100,8 +100,8 @@ class _NativeVideoWidgetState extends State<NativeVideoWidget> {
           if (_viewId == null) return;
           try {
             await _player.load(
-              playerId: 47297,
-              mediaId: 2173624,
+              playerId: 38298,
+              mediaId: 2183149,
               typeOfPlayer: "Single",
               viewId: _viewId!
             );
