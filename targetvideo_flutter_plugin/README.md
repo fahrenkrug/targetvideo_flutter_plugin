@@ -10,6 +10,8 @@ A new Flutter plugin for video reproduction using native BridSDK for iOS and And
 
 * Add 'targetvideo_flutter_plugin: ^x.x.x' to your pubspec.yaml file and run flutter pub get.
 * import 'package:targetvideo_flutter_plugin/targetvideo_player.dart'; in your class and start using our plugin.
+* Add this line in your ios Podfile:
+    just under 'plaftorm :ios. 'x.x' install! 'cocoapods', :disable_input_output_paths => true
 * We provide custom platform view you can use for easy testing, import 'package:targetvideo_flutter_plugin/targetvideo_player_platform_view.dart'; to use it.
 * It is necessary to add NSUserTrackingUsageDescription to your app info.plist file.
 * Create a player with its player reference: 'final TargetVideoPlayer _player = TargetVideoPlayer(playerReference: "playerName")'
