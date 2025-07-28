@@ -17,3 +17,7 @@
 ## 1.0.1 
 
 * ios min version change to 15.0
+
+## 1.0.2
+
+* Android min api level set to 23
