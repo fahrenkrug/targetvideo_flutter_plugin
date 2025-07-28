@@ -14,5 +14,6 @@
 
 * Android support added
 
-## 1.0.1
-* Added support for iOS 15.0
+## 1.0.1 
+
+* ios min version change to 15.0
