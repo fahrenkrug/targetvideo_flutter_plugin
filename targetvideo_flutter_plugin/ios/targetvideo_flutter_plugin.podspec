@@ -18,11 +18,6 @@ A new Flutter plugin project.
   s.dependency 'Flutter'
   s.dependency 'BridSDK'
   s.dependency 'google-cast-sdk'
-  s.dependency 'PrebidMobile'
-#   s.dependency 'BridSDKDynamicProtobuf'
-
-s.vendored_frameworks = 'path/to/BridSDKDynamicProtobuf.framework'
-
 
   s.platform = :ios, '15.0'
   # Flutter.framework does not contain a i386 slice.

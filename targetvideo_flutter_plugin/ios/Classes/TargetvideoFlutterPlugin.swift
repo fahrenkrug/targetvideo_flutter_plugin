@@ -3,7 +3,6 @@ import UIKit
 import BridSDK
 import Protobuf
 import GoogleCast
-import PrebidMobile
 
 public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
     var listOfPlayers: [String: BVPlayer?] = [:]

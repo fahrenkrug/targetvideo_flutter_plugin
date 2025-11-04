@@ -7,15 +7,11 @@ PODS:
   - GoogleAds-IMA-iOS-SDK (3.26.1)
   - integration_test (0.0.1):
     - Flutter
-  - PrebidMobile (3.0.2):
-    - PrebidMobile/core (= 3.0.2)
-  - PrebidMobile/core (3.0.2)
   - Protobuf (3.29.5)
   - targetvideo_flutter_plugin (1.0.2):
     - BridSDK
     - Flutter
     - google-cast-sdk
-    - PrebidMobile
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -27,7 +23,6 @@ SPEC REPOS:
     - BridSDK
     - google-cast-sdk
     - GoogleAds-IMA-iOS-SDK
-    - PrebidMobile
     - Protobuf
 
 EXTERNAL SOURCES:
@@ -43,10 +38,9 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   google-cast-sdk: 1fb6724e94cc5ff23b359176e0cf6360586bb97a
   GoogleAds-IMA-iOS-SDK: 10b8f194e7cd2714d4de9a0587c46c8aaf06c620
-  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  PrebidMobile: b30c7fc32ebfa6a300879b10b5d01eddcdfd9197
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   Protobuf: 164aea2ae380c3951abdc3e195220c01d17400e0
-  targetvideo_flutter_plugin: c937db8f9e7f82dba09968703a16a9e67bc5a946
+  targetvideo_flutter_plugin: 6356eee7b15d36f3bd5847f814bf06a4821801c1
 
 PODFILE CHECKSUM: b8b6e418176e57bc864d7254a05075a3714e37bb
 
