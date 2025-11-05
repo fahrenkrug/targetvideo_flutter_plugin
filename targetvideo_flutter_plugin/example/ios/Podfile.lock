@@ -7,15 +7,22 @@ PODS:
   - GoogleAds-IMA-iOS-SDK (3.26.1)
   - integration_test (0.0.1):
     - Flutter
+  - permission_handler_apple (9.3.0):
+    - Flutter
+  - PrebidMobile (3.1.1):
+    - PrebidMobile/core (= 3.1.1)
+  - PrebidMobile/core (3.1.1)
   - Protobuf (3.29.5)
   - targetvideo_flutter_plugin (1.0.2):
     - BridSDK
     - Flutter
     - google-cast-sdk
+    - PrebidMobile
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - targetvideo_flutter_plugin (from `.symlinks/plugins/targetvideo_flutter_plugin/ios`)
 
 SPEC REPOS:
@@ -23,6 +30,7 @@ SPEC REPOS:
     - BridSDK
     - google-cast-sdk
     - GoogleAds-IMA-iOS-SDK
+    - PrebidMobile
     - Protobuf
 
 EXTERNAL SOURCES:
@@ -30,6 +38,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   targetvideo_flutter_plugin:
     :path: ".symlinks/plugins/targetvideo_flutter_plugin/ios"
 
@@ -39,8 +49,10 @@ SPEC CHECKSUMS:
   google-cast-sdk: 1fb6724e94cc5ff23b359176e0cf6360586bb97a
   GoogleAds-IMA-iOS-SDK: 10b8f194e7cd2714d4de9a0587c46c8aaf06c620
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  PrebidMobile: 034747533a7efd2e3394e20072e4b7005b0fd715
   Protobuf: 164aea2ae380c3951abdc3e195220c01d17400e0
-  targetvideo_flutter_plugin: 6356eee7b15d36f3bd5847f814bf06a4821801c1
+  targetvideo_flutter_plugin: 970c6e71f9e4dde9a5cececbfebdf15fbe2b33a1
 
 PODFILE CHECKSUM: b8b6e418176e57bc864d7254a05075a3714e37bb
 
