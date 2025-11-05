@@ -18,10 +18,13 @@ public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {
         let eventChannel = FlutterEventChannel(name: "targetvideo_flutter_plugin/events", binaryMessenger: registrar.messenger())
         let videoViewFactory = NativeVideoViewFactory()
         let instance = TargetvideoFlutterPlugin(videoViewFactory: videoViewFactory)
-        
+
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.register(videoViewFactory, withId: "targetvideo/player_video_view")
         eventChannel.setStreamHandler(instance)
+
+        // Register Google Cast plugin
+        SwiftGoogleCastPlugin.register(with: registrar)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
