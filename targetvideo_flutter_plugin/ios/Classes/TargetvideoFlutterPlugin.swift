@@ -1,7 +1,6 @@
 import Flutter
 import UIKit
 import BridSDK
-import Protobuf
 import GoogleCast
 
 public class TargetvideoFlutterPlugin: NSObject, FlutterPlugin {

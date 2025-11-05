@@ -1,10 +1,10 @@
-/// Flutter Chrome Cast Plugin
+/// TargetVideo Flutter Plugin
 ///
-/// A comprehensive library for integrating Google Cast functionality into Flutter apps.
+/// A comprehensive library for integrating video playback and Google Cast functionality into Flutter apps.
 ///
 /// ## Main Import
 /// ```dart
-/// import 'package:flutter_chrome_cast/flutter_chrome_cast.dart';
+/// import 'package:targetvideo_flutter_plugin/flutter_chrome_cast.dart';
 /// ```
 ///
 /// ## Selective Imports
@@ -12,22 +12,22 @@
 ///
 /// ```dart
 /// // Core casting functionality
-/// import 'package:flutter_chrome_cast/cast_context.dart';
-/// import 'package:flutter_chrome_cast/discovery.dart';
-/// import 'package:flutter_chrome_cast/session.dart';
-/// import 'package:flutter_chrome_cast/media.dart';
+/// import 'package:targetvideo_flutter_plugin/cast_context.dart';
+/// import 'package:targetvideo_flutter_plugin/discovery.dart';
+/// import 'package:targetvideo_flutter_plugin/session.dart';
+/// import 'package:targetvideo_flutter_plugin/media.dart';
 ///
 /// // UI Widgets
-/// import 'package:flutter_chrome_cast/widgets.dart';
+/// import 'package:targetvideo_flutter_plugin/widgets.dart';
 ///
 /// // Models and Entities
-/// import 'package:flutter_chrome_cast/models.dart';
-/// import 'package:flutter_chrome_cast/entities.dart';
+/// import 'package:targetvideo_flutter_plugin/models.dart';
+/// import 'package:targetvideo_flutter_plugin/entities.dart';
 ///
 /// // Enums and Constants
-/// import 'package:flutter_chrome_cast/enums.dart';
+/// import 'package:targetvideo_flutter_plugin/enums.dart';
 /// ```
-library flutter_chrome_cast;
+library targetvideo_flutter_plugin;
 
 // Core functionality
 export 'cast_context.dart';

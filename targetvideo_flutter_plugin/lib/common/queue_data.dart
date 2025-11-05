@@ -1,9 +1,9 @@
 // import 'dart:convert';
 
-// import 'package:flutter_chrome_cast/entities/queue_item.dart';
-// import 'package:flutter_chrome_cast/common/repeat_mode.dart';
-// export 'package:flutter_chrome_cast/entities/queue_item.dart';
-// export 'package:flutter_chrome_cast/common/repeat_mode.dart';
+// import 'package:targetvideo_flutter_plugin/entities/queue_item.dart';
+// import 'package:targetvideo_flutter_plugin/common/repeat_mode.dart';
+// export 'package:targetvideo_flutter_plugin/entities/queue_item.dart';
+// export 'package:targetvideo_flutter_plugin/common/repeat_mode.dart';
 
 // class GoogleCastMediaQueueData {
 //   final String? id;

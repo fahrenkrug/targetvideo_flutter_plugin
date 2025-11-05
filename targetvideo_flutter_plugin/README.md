@@ -9,13 +9,60 @@ A new Flutter plugin for video reproduction using native BridSDK for iOS and And
 ### How do I get set up? ###
 
 * Add 'targetvideo_flutter_plugin: ^x.x.x' to your pubspec.yaml file and run flutter pub get.
+* Add a version field to your pubspec.yaml (e.g., `version: 1.0.0+1`) to avoid build warnings.
 * import 'package:targetvideo_flutter_plugin/targetvideo_player.dart'; in your class and start using our plugin.
-* Add this line in your ios Podfile:
-    just under 'plaftorm :ios. 'x.x' install! 'cocoapods', :disable_input_output_paths => true
 * We provide custom platform view you can use for easy testing, import 'package:targetvideo_flutter_plugin/targetvideo_player_platform_view.dart'; to use it.
 * It is necessary to add NSUserTrackingUsageDescription to your app info.plist file.
 * Create a player with its player reference: 'final TargetVideoPlayer _player = TargetVideoPlayer(playerReference: "playerName")'
 * Call 'load' player method to start a video reproduction in your view.
+
+### iOS Setup Requirements ###
+
+The plugin depends on BridSDK, which requires specific runtime dependencies. Your iOS Podfile must be configured correctly:
+
+**1. Use Dynamic Frameworks**
+
+Your `ios/Podfile` must use dynamic frameworks (not static). Configure it like this:
+
+```ruby
+platform :ios, '15.0'
+
+target 'Runner' do
+  use_frameworks!  # Dynamic frameworks (do NOT use :linkage => :static)
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end
+```
+
+**2. Required Dependencies**
+
+The plugin automatically includes these dependencies via podspec:
+- `BridSDK` - Video player framework
+- `google-cast-sdk` - Google Cast support
+- `PrebidMobile` - Ad bidding framework
+- `BridSDKDynamicProtobuf` - Protocol buffers support
+
+These will be installed automatically when you run `flutter pub get` or `pod install`.
+
+**3. Clean Build if Switching from Static to Dynamic**
+
+If you previously had static framework linkage configured:
+
+```bash
+flutter clean
+rm -rf ios/Pods ios/Podfile.lock
+flutter pub get
+flutter build ios
+```
+
+**Note:** BridSDK is a pre-built dynamic framework that requires PrebidMobile and Protobuf to be available as dynamic frameworks at runtime. This is why static linkage is not supported.
 
 ### Player Methods ###
 
