@@ -17,7 +17,7 @@ A new Flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.dependency 'BridSDK'
-  s.dependency 'google-cast-sdk'
+  s.dependency 'google-cast-sdk', '4.8.3'
   s.dependency 'PrebidMobile'
   s.dependency 'BridSDKDynamicProtobuf'
 
